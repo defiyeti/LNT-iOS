@@ -7,12 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A987FA321A9AC889009BFF8A /* drop shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA311A9AC889009BFF8A /* drop shadow.png */; };
+		A987FA341A9AC933009BFF8A /* LNT-Drop-Shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA331A9AC933009BFF8A /* LNT-Drop-Shadow.png */; };
+		A987FA361A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */; };
+		A987FA381A9ACCEA009BFF8A /* LNT-Drop-Shadow3.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA371A9ACCEA009BFF8A /* LNT-Drop-Shadow3.png */; };
+		A987FA3A1A9ACD60009BFF8A /* LNT-Drop-Shadow4.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA391A9ACD60009BFF8A /* LNT-Drop-Shadow4.png */; };
+		A9BF93861AC5C8F500D2338F /* UtilityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF93851AC5C8F500D2338F /* UtilityCell.swift */; };
+		A9BF93881AC5CCC400D2338F /* Statistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF93871AC5CCC400D2338F /* Statistic.swift */; };
+		A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */; };
 		A9FDF7661A9545E200543429 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF7651A9545E200543429 /* AppDelegate.swift */; };
-		A9FDF7681A9545E200543429 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF7671A9545E200543429 /* ViewController.swift */; };
+		A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF7671A9545E200543429 /* HomeViewController.swift */; };
 		A9FDF76B1A9545E200543429 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9FDF7691A9545E200543429 /* Main.storyboard */; };
-		A9FDF76D1A9545E200543429 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9FDF76C1A9545E200543429 /* Images.xcassets */; };
 		A9FDF7701A9545E200543429 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9FDF76E1A9545E200543429 /* LaunchScreen.xib */; };
 		A9FDF77C1A9545E200543429 /* LNTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF77B1A9545E200543429 /* LNTTests.swift */; };
+		A9FDF7851A95468E00543429 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9FDF76C1A9545E200543429 /* Images.xcassets */; };
+		A9FDF7871A95469600543429 /* LNT-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9FDF7861A95469600543429 /* LNT-Icon.png */; };
+		A9FDF7891A95473100543429 /* LNT-Icon_120px.png in Resources */ = {isa = PBXBuildFile; fileRef = A9FDF7881A95473100543429 /* LNT-Icon_120px.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,16 +36,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A987FA311A9AC889009BFF8A /* drop shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drop shadow.png"; sourceTree = "<group>"; };
+		A987FA331A9AC933009BFF8A /* LNT-Drop-Shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow.png"; sourceTree = "<group>"; };
+		A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow2.png"; sourceTree = "<group>"; };
+		A987FA371A9ACCEA009BFF8A /* LNT-Drop-Shadow3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow3.png"; sourceTree = "<group>"; };
+		A987FA391A9ACD60009BFF8A /* LNT-Drop-Shadow4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow4.png"; sourceTree = "<group>"; };
+		A9BF93851AC5C8F500D2338F /* UtilityCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityCell.swift; sourceTree = "<group>"; };
+		A9BF93871AC5CCC400D2338F /* Statistic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistic.swift; sourceTree = "<group>"; };
+		A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		A9FDF7601A9545E200543429 /* LNT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9FDF7641A9545E200543429 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9FDF7651A9545E200543429 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A9FDF7671A9545E200543429 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A9FDF7671A9545E200543429 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		A9FDF76A1A9545E200543429 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A9FDF76C1A9545E200543429 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A9FDF76F1A9545E200543429 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		A9FDF7751A9545E200543429 /* LNTTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LNTTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9FDF77A1A9545E200543429 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9FDF77B1A9545E200543429 /* LNTTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNTTests.swift; sourceTree = "<group>"; };
+		A9FDF7861A95469600543429 /* LNT-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Icon.png"; sourceTree = "<group>"; };
+		A9FDF7881A95473100543429 /* LNT-Icon_120px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Icon_120px.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +82,13 @@
 				A9FDF7621A9545E200543429 /* LNT */,
 				A9FDF7781A9545E200543429 /* LNTTests */,
 				A9FDF7611A9545E200543429 /* Products */,
+				A9FDF7861A95469600543429 /* LNT-Icon.png */,
+				A9FDF7881A95473100543429 /* LNT-Icon_120px.png */,
+				A987FA311A9AC889009BFF8A /* drop shadow.png */,
+				A987FA331A9AC933009BFF8A /* LNT-Drop-Shadow.png */,
+				A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */,
+				A987FA371A9ACCEA009BFF8A /* LNT-Drop-Shadow3.png */,
+				A987FA391A9ACD60009BFF8A /* LNT-Drop-Shadow4.png */,
 			);
 			sourceTree = "<group>";
 		};
@@ -78,7 +105,10 @@
 			isa = PBXGroup;
 			children = (
 				A9FDF7651A9545E200543429 /* AppDelegate.swift */,
-				A9FDF7671A9545E200543429 /* ViewController.swift */,
+				A9FDF7671A9545E200543429 /* HomeViewController.swift */,
+				A9BF93851AC5C8F500D2338F /* UtilityCell.swift */,
+				A9BF93871AC5CCC400D2338F /* Statistic.swift */,
+				A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */,
 				A9FDF7691A9545E200543429 /* Main.storyboard */,
 				A9FDF76C1A9545E200543429 /* Images.xcassets */,
 				A9FDF76E1A9545E200543429 /* LaunchScreen.xib */,
@@ -192,9 +222,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A987FA381A9ACCEA009BFF8A /* LNT-Drop-Shadow3.png in Resources */,
+				A9FDF7851A95468E00543429 /* Images.xcassets in Resources */,
 				A9FDF76B1A9545E200543429 /* Main.storyboard in Resources */,
+				A987FA341A9AC933009BFF8A /* LNT-Drop-Shadow.png in Resources */,
 				A9FDF7701A9545E200543429 /* LaunchScreen.xib in Resources */,
-				A9FDF76D1A9545E200543429 /* Images.xcassets in Resources */,
+				A987FA361A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png in Resources */,
+				A987FA321A9AC889009BFF8A /* drop shadow.png in Resources */,
+				A9FDF7891A95473100543429 /* LNT-Icon_120px.png in Resources */,
+				A987FA3A1A9ACD60009BFF8A /* LNT-Drop-Shadow4.png in Resources */,
+				A9FDF7871A95469600543429 /* LNT-Icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,7 +249,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9FDF7681A9545E200543429 /* ViewController.swift in Sources */,
+				A9BF93861AC5C8F500D2338F /* UtilityCell.swift in Sources */,
+				A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */,
+				A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */,
+				A9BF93881AC5CCC400D2338F /* Statistic.swift in Sources */,
 				A9FDF7661A9545E200543429 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,6 +445,7 @@
 				A9FDF7811A9545E200543429 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A9FDF7821A9545E200543429 /* Build configuration list for PBXNativeTarget "LNTTests" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +454,7 @@
 				A9FDF7841A9545E200543429 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
