@@ -10,8 +10,13 @@ import UIKit
 
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
+        self.navigationController?.title = "Your Usage"
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -25,10 +30,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch indexPath.row {
         case 0:
             cell.utilityName = "Electricity"
+            cell.yourConsumptionLabel.text = "Your Consumption\n1150 kW/hr"
+            cell.localAverageLabel.text = "Local Average\n970 kW/hr"
         case 1:
             cell.utilityName = "Water"
+            cell.protoGraphView.backgroundColor = UIColor(red: 160/255.0, green: 197/255.0, blue: 249/255.0, alpha: 1.0)
         case 2:
             cell.utilityName = "Natural Gas"
+            cell.protoGraphView.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
         default:
             break
         }

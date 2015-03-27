@@ -10,9 +10,21 @@ import Foundation
 import UIKit
 
 class UtilityCell: UITableViewCell {
-    var utilityName: String!
+    
+    private var _utilityName: String!
+    var utilityName: String! {
+        get {
+            return _utilityName
+        }
+        
+        set {
+            titleLabel.text = newValue
+            _utilityName = newValue
+        }
+    }
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var yourConsumptionLabel: UILabel!
     @IBOutlet weak var localAverageLabel: UILabel!
+    @IBOutlet weak var protoGraphView: UIView!
 }
