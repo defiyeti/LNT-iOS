@@ -14,6 +14,10 @@
 		A987FA3A1A9ACD60009BFF8A /* LNT-Drop-Shadow4.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA391A9ACD60009BFF8A /* LNT-Drop-Shadow4.png */; };
 		A9BF93861AC5C8F500D2338F /* UtilityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF93851AC5C8F500D2338F /* UtilityCell.swift */; };
 		A9BF93881AC5CCC400D2338F /* Statistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF93871AC5CCC400D2338F /* Statistic.swift */; };
+		A9BF938A1AC601DB00D2338F /* UserAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF93891AC601DB00D2338F /* UserAuthViewController.swift */; };
+		A9BF938C1AC604DD00D2338F /* TextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF938B1AC604DD00D2338F /* TextFieldCell.swift */; };
+		A9BF938E1AC77F6F00D2338F /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF938D1AC77F6F00D2338F /* ButtonCell.swift */; };
+		A9BF93901AC86B1900D2338F /* ToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF938F1AC86B1900D2338F /* ToggleCell.swift */; };
 		A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */; };
 		A9FDF7661A9545E200543429 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF7651A9545E200543429 /* AppDelegate.swift */; };
 		A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF7671A9545E200543429 /* HomeViewController.swift */; };
@@ -43,6 +47,10 @@
 		A987FA391A9ACD60009BFF8A /* LNT-Drop-Shadow4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow4.png"; sourceTree = "<group>"; };
 		A9BF93851AC5C8F500D2338F /* UtilityCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityCell.swift; sourceTree = "<group>"; };
 		A9BF93871AC5CCC400D2338F /* Statistic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistic.swift; sourceTree = "<group>"; };
+		A9BF93891AC601DB00D2338F /* UserAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAuthViewController.swift; sourceTree = "<group>"; };
+		A9BF938B1AC604DD00D2338F /* TextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCell.swift; sourceTree = "<group>"; };
+		A9BF938D1AC77F6F00D2338F /* ButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
+		A9BF938F1AC86B1900D2338F /* ToggleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToggleCell.swift; sourceTree = "<group>"; };
 		A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		A9FDF7601A9545E200543429 /* LNT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9FDF7641A9545E200543429 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,7 +114,11 @@
 			children = (
 				A9FDF7651A9545E200543429 /* AppDelegate.swift */,
 				A9FDF7671A9545E200543429 /* HomeViewController.swift */,
+				A9BF93891AC601DB00D2338F /* UserAuthViewController.swift */,
 				A9BF93851AC5C8F500D2338F /* UtilityCell.swift */,
+				A9BF938B1AC604DD00D2338F /* TextFieldCell.swift */,
+				A9BF938D1AC77F6F00D2338F /* ButtonCell.swift */,
+				A9BF938F1AC86B1900D2338F /* ToggleCell.swift */,
 				A9BF93871AC5CCC400D2338F /* Statistic.swift */,
 				A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */,
 				A9FDF7691A9545E200543429 /* Main.storyboard */,
@@ -251,10 +263,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9BF93861AC5C8F500D2338F /* UtilityCell.swift in Sources */,
+				A9BF93901AC86B1900D2338F /* ToggleCell.swift in Sources */,
 				A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */,
 				A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */,
+				A9BF938A1AC601DB00D2338F /* UserAuthViewController.swift in Sources */,
 				A9BF93881AC5CCC400D2338F /* Statistic.swift in Sources */,
+				A9BF938C1AC604DD00D2338F /* TextFieldCell.swift in Sources */,
 				A9FDF7661A9545E200543429 /* AppDelegate.swift in Sources */,
+				A9BF938E1AC77F6F00D2338F /* ButtonCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

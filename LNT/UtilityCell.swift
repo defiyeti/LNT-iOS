@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+@IBDesignable
 class UtilityCell: UITableViewCell {
     
     private var _utilityName: String!
