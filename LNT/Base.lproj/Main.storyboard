@@ -45,7 +45,42 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N2i-H1-tcI">
                                                     <rect key="frame" x="8" y="12" width="304" height="228"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6i0-V6-GVJ" customClass="Graph" customModule="LNT" customModuleProvider="target">
+                                                            <rect key="frame" x="8" y="156" width="288" height="64"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="axisColor">
+                                                                    <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="yIncrements">
+                                                                    <integer key="value" value="1"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="rightPadding">
+                                                                    <real key="value" value="15"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="topPadding">
+                                                                    <real key="value" value="4"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="axisWidth">
+                                                                    <real key="value" value="2"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="topColor">
+                                                                    <color key="value" red="0.27058823529999998" green="0.58431372550000005" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="bottomColor">
+                                                                    <color key="value" red="0.096480302512645721" green="0.20624382793903351" blue="0.0924801304936409" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </view>
+                                                    </subviews>
                                                     <color key="backgroundColor" red="1" green="0.7843137255" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstItem="6i0-V6-GVJ" firstAttribute="bottom" secondItem="N2i-H1-tcI" secondAttribute="bottomMargin" id="9yO-KJ-pWm"/>
+                                                        <constraint firstItem="6i0-V6-GVJ" firstAttribute="trailing" secondItem="N2i-H1-tcI" secondAttribute="trailingMargin" id="XVk-Q7-JD0"/>
+                                                        <constraint firstItem="6i0-V6-GVJ" firstAttribute="top" secondItem="N2i-H1-tcI" secondAttribute="top" constant="156" id="dWY-EE-NyL"/>
+                                                        <constraint firstItem="6i0-V6-GVJ" firstAttribute="leading" secondItem="N2i-H1-tcI" secondAttribute="leadingMargin" id="rZq-HJ-jMp"/>
+                                                    </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="15"/>
@@ -157,7 +192,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="229" y="388"/>
+            <point key="canvasLocation" x="229" y="564"/>
         </scene>
         <!--User Auth View Controller-->
         <scene sceneID="4d7-ED-k4v">
