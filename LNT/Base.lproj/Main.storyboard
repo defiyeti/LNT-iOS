@@ -38,17 +38,16 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UtilityCell" rowHeight="250" id="4tM-AY-4nQ" customClass="UtilityCell" customModule="LNT" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UtilityCell" rowHeight="309" id="4tM-AY-4nQ" customClass="UtilityCell" customModule="LNT" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4tM-AY-4nQ" id="yzR-qA-KgR">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N2i-H1-tcI">
-                                                    <rect key="frame" x="8" y="12" width="304" height="228"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N2i-H1-tcI">
+                                                    <rect key="frame" x="8" y="12" width="304" height="289"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6i0-V6-GVJ" customClass="Graph" customModule="LNT" customModuleProvider="target">
-                                                            <rect key="frame" x="8" y="156" width="288" height="64"/>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6i0-V6-GVJ" customClass="Graph" customModule="LNT" customModuleProvider="target">
+                                                            <rect key="frame" x="8" y="163" width="288" height="118"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="color" keyPath="axisColor">
                                                                     <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -65,11 +64,23 @@
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="axisWidth">
                                                                     <real key="value" value="2"/>
                                                                 </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="topColor">
-                                                                    <color key="value" red="0.27058823529999998" green="0.58431372550000005" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="xMin">
+                                                                    <real key="value" value="0.0"/>
                                                                 </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="bottomColor">
-                                                                    <color key="value" red="0.096480302512645721" green="0.20624382793903351" blue="0.0924801304936409" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="xMax">
+                                                                    <real key="value" value="100"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="yMin">
+                                                                    <real key="value" value="0.0"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="yMax">
+                                                                    <real key="value" value="100"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="bottomPadding">
+                                                                    <real key="value" value="15"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="leftPadding">
+                                                                    <real key="value" value="40"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
@@ -78,7 +89,7 @@
                                                     <constraints>
                                                         <constraint firstItem="6i0-V6-GVJ" firstAttribute="bottom" secondItem="N2i-H1-tcI" secondAttribute="bottomMargin" id="9yO-KJ-pWm"/>
                                                         <constraint firstItem="6i0-V6-GVJ" firstAttribute="trailing" secondItem="N2i-H1-tcI" secondAttribute="trailingMargin" id="XVk-Q7-JD0"/>
-                                                        <constraint firstItem="6i0-V6-GVJ" firstAttribute="top" secondItem="N2i-H1-tcI" secondAttribute="top" constant="156" id="dWY-EE-NyL"/>
+                                                        <constraint firstItem="6i0-V6-GVJ" firstAttribute="top" secondItem="N2i-H1-tcI" secondAttribute="top" constant="163" id="dWY-EE-NyL"/>
                                                         <constraint firstItem="6i0-V6-GVJ" firstAttribute="leading" secondItem="N2i-H1-tcI" secondAttribute="leadingMargin" id="rZq-HJ-jMp"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
@@ -123,7 +134,7 @@
                                                 <constraint firstItem="nL4-Z0-3If" firstAttribute="leading" secondItem="eXR-1e-UcE" secondAttribute="leading" id="LSh-Pz-gMm"/>
                                                 <constraint firstItem="eXR-1e-UcE" firstAttribute="leading" secondItem="j3J-1J-6Rp" secondAttribute="leading" id="SNF-dJ-Svr"/>
                                                 <constraint firstItem="eXR-1e-UcE" firstAttribute="trailing" secondItem="j3J-1J-6Rp" secondAttribute="trailing" id="ffG-fR-IvD"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="N2i-H1-tcI" secondAttribute="bottom" constant="1" id="nzg-3N-rjJ"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="N2i-H1-tcI" secondAttribute="bottom" id="nzg-3N-rjJ"/>
                                                 <constraint firstItem="nL4-Z0-3If" firstAttribute="top" secondItem="yzR-qA-KgR" secondAttribute="topMargin" constant="4" id="see-Xc-LL8"/>
                                                 <constraint firstItem="N2i-H1-tcI" firstAttribute="leading" secondItem="yzR-qA-KgR" secondAttribute="leadingMargin" id="tiR-36-76P"/>
                                                 <constraint firstItem="nL4-Z0-3If" firstAttribute="trailing" secondItem="eXR-1e-UcE" secondAttribute="trailing" id="u3e-jn-QLs"/>
@@ -355,10 +366,10 @@
             </objects>
             <point key="canvasLocation" x="658" y="-8"/>
         </scene>
-        <!--View Controller-->
+        <!--Tips View Controller-->
         <scene sceneID="eU0-su-P2U">
             <objects>
-                <viewController id="6YK-MS-mRc" sceneMemberID="viewController">
+                <viewController id="6YK-MS-mRc" customClass="TipsViewController" customModule="LNT" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="e7W-Yy-CDz"/>
                         <viewControllerLayoutGuide type="bottom" id="KZC-ed-NTa"/>
@@ -378,7 +389,53 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cmh-2y-ufe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1090" y="-8"/>
+            <point key="canvasLocation" x="1099" y="703"/>
+        </scene>
+        <!--Stat Input View Controller-->
+        <scene sceneID="guo-Nw-dQO">
+            <objects>
+                <viewController id="dj7-CI-4Od" customClass="StatInputViewController" customModule="LNT" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2AK-cK-lOC"/>
+                        <viewControllerLayoutGuide type="bottom" id="3cc-pD-iTX"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="SiP-Ff-94M">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="81" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Dwz-v9-cLv">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="81" id="HYE-4a-UhH">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HYE-4a-UhH" id="a1a-EV-NUr">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="100" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xw2-RV-aEO">
+                                                    <rect key="frame" x="215" y="25" width="97" height="30"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Electricity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2tc-5n-onr">
+                                                    <rect key="frame" x="8" y="29" width="75" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EXZ-uY-oNk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="710" y="900"/>
         </scene>
     </scenes>
 </document>
