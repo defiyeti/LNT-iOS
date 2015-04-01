@@ -28,4 +28,5 @@ class UtilityCell: UITableViewCell {
     @IBOutlet weak var yourConsumptionLabel: UILabel!
     @IBOutlet weak var localAverageLabel: UILabel!
     @IBOutlet weak var protoGraphView: UIView!
+    @IBOutlet var background: GradientView!
 }

@@ -20,6 +20,7 @@
 		A9BF93901AC86B1900D2338F /* ToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF938F1AC86B1900D2338F /* ToggleCell.swift */; };
 		A9D97F361ACB2C730099D1AC /* TipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D97F351ACB2C730099D1AC /* TipsViewController.swift */; };
 		A9D97F381ACB2D6A0099D1AC /* StatInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D97F371ACB2D6A0099D1AC /* StatInputViewController.swift */; };
+		A9D97F3A1ACB43810099D1AC /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D97F391ACB43810099D1AC /* GradientView.swift */; };
 		A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */; };
 		A9FDF7661A9545E200543429 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF7651A9545E200543429 /* AppDelegate.swift */; };
 		A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FDF7671A9545E200543429 /* HomeViewController.swift */; };
@@ -55,6 +56,7 @@
 		A9BF938F1AC86B1900D2338F /* ToggleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToggleCell.swift; sourceTree = "<group>"; };
 		A9D97F351ACB2C730099D1AC /* TipsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipsViewController.swift; sourceTree = "<group>"; };
 		A9D97F371ACB2D6A0099D1AC /* StatInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatInputViewController.swift; sourceTree = "<group>"; };
+		A9D97F391ACB43810099D1AC /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		A9FDF7601A9545E200543429 /* LNT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9FDF7641A9545E200543429 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				A9BF938B1AC604DD00D2338F /* TextFieldCell.swift */,
 				A9BF938D1AC77F6F00D2338F /* ButtonCell.swift */,
 				A9BF938F1AC86B1900D2338F /* ToggleCell.swift */,
+				A9D97F391ACB43810099D1AC /* GradientView.swift */,
 				A9BF93871AC5CCC400D2338F /* Statistic.swift */,
 				A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */,
 				A9FDF7691A9545E200543429 /* Main.storyboard */,
@@ -270,6 +273,7 @@
 			files = (
 				A9BF93861AC5C8F500D2338F /* UtilityCell.swift in Sources */,
 				A9BF93901AC86B1900D2338F /* ToggleCell.swift in Sources */,
+				A9D97F3A1ACB43810099D1AC /* GradientView.swift in Sources */,
 				A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */,
 				A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */,
 				A9BF938A1AC601DB00D2338F /* UserAuthViewController.swift in Sources */,

@@ -27,13 +27,13 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "LNT-Drop-Shadow4.png",
+      "filename" : "LNT-Drop-Shadow-reverse-120px.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "LNT-Drop-Shadow4-1.png",
+      "filename" : "LNT-Drop-Shadow-180px.png",
       "scale" : "3x"
     }
   ],

@@ -12,4 +12,5 @@ import UIKit
 class ToggleCell: UITableViewCell {
     @IBOutlet var toggleLabel: UILabel!
     @IBOutlet var toggleSwitch: UISwitch!
+    @IBOutlet var background: GradientView!
 }
