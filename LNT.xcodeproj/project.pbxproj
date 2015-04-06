@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A9185E281ACF0CFA000229D1 /* LNT-icon-180px.png in Resources */ = {isa = PBXBuildFile; fileRef = A9185E271ACF0CFA000229D1 /* LNT-icon-180px.png */; };
+		A9185E2A1ACF152A000229D1 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9185E291ACF152A000229D1 /* Alamofire.swift */; };
 		A987FA321A9AC889009BFF8A /* drop shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA311A9AC889009BFF8A /* drop shadow.png */; };
 		A987FA341A9AC933009BFF8A /* LNT-Drop-Shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA331A9AC933009BFF8A /* LNT-Drop-Shadow.png */; };
 		A987FA361A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */; };
@@ -43,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A9185E271ACF0CFA000229D1 /* LNT-icon-180px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-icon-180px.png"; sourceTree = "<group>"; };
+		A9185E291ACF152A000229D1 /* Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
 		A987FA311A9AC889009BFF8A /* drop shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drop shadow.png"; sourceTree = "<group>"; };
 		A987FA331A9AC933009BFF8A /* LNT-Drop-Shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow.png"; sourceTree = "<group>"; };
 		A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow2.png"; sourceTree = "<group>"; };
@@ -103,6 +107,7 @@
 				A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */,
 				A987FA371A9ACCEA009BFF8A /* LNT-Drop-Shadow3.png */,
 				A987FA391A9ACD60009BFF8A /* LNT-Drop-Shadow4.png */,
+				A9185E271ACF0CFA000229D1 /* LNT-icon-180px.png */,
 			);
 			sourceTree = "<group>";
 		};
@@ -119,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				A9FDF7651A9545E200543429 /* AppDelegate.swift */,
+				A9185E291ACF152A000229D1 /* Alamofire.swift */,
 				A9FDF7671A9545E200543429 /* HomeViewController.swift */,
 				A9BF93891AC601DB00D2338F /* UserAuthViewController.swift */,
 				A9BF93851AC5C8F500D2338F /* UtilityCell.swift */,
@@ -246,6 +252,7 @@
 			files = (
 				A987FA381A9ACCEA009BFF8A /* LNT-Drop-Shadow3.png in Resources */,
 				A9FDF7851A95468E00543429 /* Images.xcassets in Resources */,
+				A9185E281ACF0CFA000229D1 /* LNT-icon-180px.png in Resources */,
 				A9FDF76B1A9545E200543429 /* Main.storyboard in Resources */,
 				A987FA341A9AC933009BFF8A /* LNT-Drop-Shadow.png in Resources */,
 				A9FDF7701A9545E200543429 /* LaunchScreen.xib in Resources */,
@@ -274,6 +281,7 @@
 				A9BF93861AC5C8F500D2338F /* UtilityCell.swift in Sources */,
 				A9BF93901AC86B1900D2338F /* ToggleCell.swift in Sources */,
 				A9D97F3A1ACB43810099D1AC /* GradientView.swift in Sources */,
+				A9185E2A1ACF152A000229D1 /* Alamofire.swift in Sources */,
 				A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */,
 				A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */,
 				A9BF938A1AC601DB00D2338F /* UserAuthViewController.swift in Sources */,

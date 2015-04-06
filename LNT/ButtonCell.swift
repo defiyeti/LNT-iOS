@@ -9,6 +9,15 @@
 import Foundation
 import UIKit
 
+protocol ButtonCellDelegate {
+    func didPressButtonCell(buttonCell: ButtonCell)
+}
+
 class ButtonCell: UITableViewCell {
+    var delegate: ButtonCellDelegate?
     @IBOutlet var button: UIButton!
+    
+    @IBAction func didPressButton(sender: AnyObject) {
+        delegate?.didPressButtonCell(self)
+    }
 }

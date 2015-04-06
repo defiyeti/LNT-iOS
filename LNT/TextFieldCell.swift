@@ -11,4 +11,6 @@ import UIKit
 
 class TextFieldCell: UITableViewCell {
     @IBOutlet var textField: UITextField!
+    @IBOutlet var label: UILabel!
+    @IBOutlet var gradientView: GradientView!
 }

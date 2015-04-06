@@ -16,6 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        let email = NSUserDefaults.standardUserDefaults().stringForKey("UserLoginEmail")?
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        if email != nil {
+            self.window?.rootViewController = storyboard.instantiateInitialViewController() as? UIViewController
+        }
+        else {
+            var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") as UIViewController!
+            var navigation = UINavigationController(rootViewController: rootController!)
+            self.window?.rootViewController = navigation
+        }
         return true
     }
 
