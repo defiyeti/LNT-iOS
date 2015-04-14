@@ -15,6 +15,7 @@ protocol ButtonCellDelegate {
 
 class ButtonCell: UITableViewCell {
     var delegate: ButtonCellDelegate?
+    var title: String = ""
     @IBOutlet var button: UIButton!
     
     @IBAction func didPressButton(sender: AnyObject) {

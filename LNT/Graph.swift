@@ -14,10 +14,11 @@ import UIKit
 class Graph: UIView {
     
     class Plot {
-        var points: [(CGFloat, CGFloat)] = []
+        var points: [Point] = []
         var strokeColor: UIColor
         var strokeWidth: CGFloat = 1.0
         var pointRadius: CGFloat = 2.0
+        var xRange = 100.0
         
         init() {
             strokeColor = UIColor.blackColor()
@@ -28,17 +29,30 @@ class Graph: UIView {
                 if points.count < 2 {
                     return nil
                 }
-                
-                var firstPoint = CGPoint(x: points[0].0, y: points[0].1)
-                var secondPoint = CGPoint(x: points[1].0, y: points[1].1)
+                let xIncrement: CGFloat = CGFloat(xRange) / CGFloat(points.count)
+                var firstPoint = CGPoint(x: 0.0, y: points[0].value)
+                let y = points[1].value
+                var secondPoint = CGPoint(x: xIncrement, y: points[1].value)
                 var lines = [firstPoint, secondPoint]
                 
                 for var i = 1; i < points.count - 1; i++ {
-                    lines.append(CGPoint(x: points[i].0, y: points[i].1))
-                    lines.append(CGPoint(x: points[i+1].0, y: points[i+1].1))
+                    let x1 = xIncrement * CGFloat(i)
+                    let x2 = xIncrement * CGFloat(i+1)
+                    lines.append(CGPoint(x: x1, y: points[i].value))
+                    lines.append(CGPoint(x: x2, y: points[i+1].value))
                 }
                 return lines
             }
+        }
+    }
+    
+    struct Point {
+        var object: AnyObject
+        var value: CGFloat
+        
+        init(object: AnyObject, value: CGFloat) {
+            self.object = object
+            self.value = value
         }
     }
     
@@ -131,16 +145,21 @@ class Graph: UIView {
         CGContextStrokePath(context)
     }
     
-    func projectPoints(points: [(CGFloat, CGFloat)], xMin: CGFloat, yMin: CGFloat, xMax: CGFloat, yMax: CGFloat) -> [(CGFloat, CGFloat)] {
+    func projectPoints(points: [Point], xMin: CGFloat, yMin: CGFloat, xMax: CGFloat, yMax: CGFloat) -> [(CGFloat, CGFloat)] {
         let xRange = xMax - xMin
         let yRange = yMax - yMin
         
         var p: [(CGFloat, CGFloat)] = []
+        var i = 0.0
+        let xIncrement = CGFloat(xAxisLength) / CGFloat(points.count)
         
         for point in points {
-            var x = leftPadding + ((point.0 - xMin) / xRange) * xAxisLength
-            var y = topPadding + (yAxisLength - (((point.1 - yMin) / yRange) * yAxisLength))
+//            var x = leftPadding + ((point.0 - xMin) / xRange) * xAxisLength
+            let amount = CGFloat(xIncrement) * CGFloat(i)
+            var x = leftPadding + amount
+            var y = topPadding + (yAxisLength - (((point.value - yMin) / yRange) * yAxisLength))
             p.insert((x,y), atIndex: p.count)
+            i++
         }
         
         return p
@@ -168,15 +187,22 @@ class Graph: UIView {
         var secondPoint = CGPoint(x: points[1].0, y: points[1].1)
         var lines = [firstPoint, secondPoint]
         
+        CGContextMoveToPoint(context, points[0].0, points[0].1)
+        CGContextAddLineToPoint(context, points[1].0, points[1].1)
+        
         for var i = 1; i < points.count - 1; i++ {
-            lines.append(CGPoint(x: points[i].0, y: points[i].1))
-            lines.append(CGPoint(x: points[i+1].0, y: points[i+1].1))
+            CGContextAddLineToPoint(context, points[i].0, points[i].1)
+            CGContextAddLineToPoint(context, points[i+1].0, points[i+1].1)
         }
-        CGContextAddLines(context, lines, UInt(lines.count))
+        
         CGContextSetLineWidth(context, strokeWidth)
         CGContextSetStrokeColorWithColor(context,strokeColor.CGColor)
         CGContextSetShouldAntialias(context, true)
         CGContextStrokePath(context)
+        
+        var moreLines = [lines.last!]
+        CGContextSetFillColorWithColor(context, UIColor.blueColor().CGColor)
+        CGContextFillPath(context)
         
         CGContextRestoreGState(context)
     }
@@ -188,7 +214,7 @@ class Graph: UIView {
         // X Axis
         var attributes = [NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
         NSFontAttributeName : UIFont.systemFontOfSize(17)]
-        var xAxisLabel = NSMutableAttributedString(string:"X Axis", attributes: attributes)
+        var xAxisLabel = NSMutableAttributedString(string:self.xAxisLabel, attributes: attributes as [NSObject : AnyObject])
         var line = CTLineCreateWithAttributedString(xAxisLabel)
         let bounds = CTLineGetBoundsWithOptions(line, CTLineBoundsOptions.UseOpticalBounds)
         let xn = bounds.width/2
@@ -218,10 +244,17 @@ class Graph: UIView {
         var plot = Plot()
         for var i = 0.0; i < 100.0; i += 0.5 {
             var y = 8*sin(i) + 40
-            plot.points.insert((CGFloat(i), CGFloat(y)), atIndex: plot.points.count)
+            var point = Point(object: i, value: CGFloat(y))
+            plot.points.insert(point, atIndex: plot.points.count)
         }
+//        for var i = 0.0; i < 100.0; i += 1 {
+//            var y = i
+//            plot.points.insert((CGFloat(i), CGFloat(y)), atIndex: plot.points.count)
+//        }
+        xAxisLabel = "X Axis Stuff"
         plot.strokeColor = UIColor.whiteColor()
         plot.pointRadius = 0.0
+        plot.strokeWidth = 2.0
         data.append(plot)
     }
 }

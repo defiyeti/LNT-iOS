@@ -13,17 +13,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        let email = NSUserDefaults.standardUserDefaults().stringForKey("UserLoginEmail")?
+        let email = NSUserDefaults.standardUserDefaults().stringForKey(USER_EMAIL_DEFAULTS_KEY)
         let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        
         if email != nil {
-            self.window?.rootViewController = storyboard.instantiateInitialViewController() as? UIViewController
+            let (dictionary, error) = Locksmith.loadDataForUserAccount(email!)
+            if dictionary != nil {
+                if dictionary![USER_TOKEN_KEY] != nil {
+                    self.window?.rootViewController = storyboard.instantiateInitialViewController() as? UIViewController
+                }
+                else {
+                    var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") as! UIViewController
+                    var navigation = UINavigationController(rootViewController: rootController)
+                    self.window?.rootViewController = navigation
+                }
+            }
         }
         else {
-            var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") as UIViewController!
-            var navigation = UINavigationController(rootViewController: rootController!)
+            var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") as! UIViewController
+            var navigation = UINavigationController(rootViewController: rootController)
             self.window?.rootViewController = navigation
         }
         return true

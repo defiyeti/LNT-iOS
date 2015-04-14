@@ -10,8 +10,14 @@ import Foundation
 import UIKit
 
 let LNT_URL = "http://45.55.129.205"
+let USER_TOKEN_KEY = "user_token"
+let USER_EMAIL_DEFAULTS_KEY = "UserLoginEmail"
 
-class UserAuthViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ButtonCellDelegate {
+let EMAIL_PROMPT = "Enter your email"
+let PASSWORD_PROMT = "Enter your password"
+let ZIPCODE_PROMPT = "Enter your zip code"
+
+class UserAuthViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ButtonCellDelegate, ToggleCellDelegate, UITextFieldDelegate {
     
     enum UserAuthViewMode {
         case Registration, Login;
@@ -21,6 +27,14 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet var tableView: UITableView!
     @IBOutlet var toggleDetail: UILabel!
     @IBOutlet var toggleButton: UIButton!
+    
+    var email: String = ""
+    var password: String = ""
+    var zipCode: String = ""
+    
+    var usesElectricity = true
+    var usesWater = true
+    var usesNaturalGas = true
     
     override func viewDidLoad() {
         tableView.delegate = self
@@ -32,66 +46,40 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         setRegistrationMode()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setHomeViewControllerToRoot", name: UserDidLoginNotification, object: nil)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let inset:CGFloat = 10.0
+        
         if activeMode == UserAuthViewMode.Login {
-            switch indexPath.row {
-            case 0:
-                var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as TextFieldCell!
-                cell.textField.placeholder = "Enter your username"
-                cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
-                return cell
-            case 1:
-                var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as TextFieldCell!
-                cell.textField.placeholder = "Enter your password"
-                cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
-                return cell
-            case 2:
-                var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as ButtonCell!
-                cell.button.setTitle("Log In", forState: UIControlState.Normal)
-                cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
-                return cell
-            case 3:
-                var cell = facebookCell(tableView)
-                return cell
-            default:
-                return UITableViewCell()
-            }
+            return cellForLoginSection(tableView, row: indexPath.row)
         }
         else if activeMode == UserAuthViewMode.Registration {
-//            if indexPath.section == 0 {
-//                var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as ButtonCell!
-//                cell.button.backgroundColor = UIColor(red: 59/255.0, green: 89/255.0, blue: 152/255.0, alpha: 1.0)
-//                cell.button.setTitle("Log In With Facebook", forState: UIControlState.Normal)
-//                return cell
-//            }
             if indexPath.section == 0 {
                 switch indexPath.row {
                 case 0:
-                    var cell = facebookCell(tableView)
+                    var cell = facebookButtonCell(tableView)
                     return cell
                 case 1:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as TextFieldCell!
-                    cell.textField.placeholder = "Choose a username"
+                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                    cell.textField.placeholder = EMAIL_PROMPT
+                    cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
                     return cell
                 case 2:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as TextFieldCell!
-                    cell.textField.placeholder = "Enter your email"
+                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                    cell.textField.placeholder = PASSWORD_PROMT
+                    cell.textField.secureTextEntry = true
+                    cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
                     return cell
                 case 3:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as TextFieldCell!
-                    cell.textField.placeholder = "Enter your password"
-                    cell.textField.secureTextEntry = true
-                    cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
-                    return cell
-                case 4:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as TextFieldCell!
-                    cell.textField.placeholder = "Enter your zip code"
-                    cell.textField.secureTextEntry = true
+                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                    cell.textField.placeholder = ZIPCODE_PROMPT
+                    cell.textField.keyboardType = UIKeyboardType.NumberPad
+                    cell.textField.secureTextEntry = false
+                    cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
                     return cell
                 default:
@@ -101,51 +89,93 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             else if indexPath.section == 1 {
                 switch indexPath.row {
                 case 0:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as ToggleCell!
+                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     cell.toggleLabel.text = "Electricity"
-                    cell.toggleSwitch.onTintColor = UIColor(red: 255/255.0, green: 205/255.0, blue: 62/255.0, alpha: 1.0)
-//                    cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceGreen()
-                    cell.background.topColor = UIColor(red: 255/255.0, green: 205/255.0, blue: 62/255.0, alpha: 1.0)
-                    cell.background.bottomColor = UIColor(red: 255/255.0, green: 205/255.0, blue: 62/255.0, alpha: 1.0)
+                    cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceYellow().lighterColor()
+                    cell.background.topColor = UIColor.leaveNoTraceYellow()
+                    cell.background.bottomColor = UIColor.leaveNoTraceYellow()
+                    cell.delegate = self
                     return cell
                 case 1:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as ToggleCell!
+                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     cell.toggleLabel.text = "Water"
-                    cell.toggleSwitch.onTintColor = UIColor(red: 0/255.0, green: 204/255.0, blue: 255/255.0, alpha: 1.0)
-//                    cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceGreen()
-                    cell.background.topColor = UIColor(red: 0/255.0, green: 204/255.0, blue: 255/255.0, alpha: 1.0)
-                    cell.background.bottomColor = UIColor(red: 0/255.0, green: 204/255.0, blue: 255/255.0, alpha: 1.0)
+                    cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceBlue().lighterColor()
+                    cell.background.topColor = UIColor.leaveNoTraceBlue()
+                    cell.background.bottomColor = UIColor.leaveNoTraceBlue()
+                    cell.delegate = self
                     return cell
                 case 2:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as ToggleCell!
+                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     cell.toggleLabel.text = "Natural Gas"
-                    cell.toggleSwitch.onTintColor = UIColor(red: 255/255.0, green: 0/255.0, blue: 255/255.0, alpha: 1.0)
-//                    cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceGreen()
-                    cell.background.topColor = UIColor(red: 255/255.0, green: 0/255.0, blue: 255/255.0, alpha: 1.0)
-                    cell.background.bottomColor = UIColor(red: 255/255.0, green: 0/255.0, blue: 255/255.0, alpha: 1.0)
+                    cell.toggleSwitch.onTintColor = UIColor(white: 1.0, alpha: 0.5)
+                    cell.background.topColor = UIColor.leaveNoTracePink()
+                    cell.background.bottomColor = UIColor.leaveNoTracePink()
+                    cell.delegate = self
                     return cell
                 default:
                     return UITableViewCell()
                 }
             }
             else if indexPath.section == 2 {
-                var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as ButtonCell!
-                cell.button.setTitle("Sign Up", forState: UIControlState.Normal)
-                cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
-                cell.delegate = self
-                return cell
+                return signUpButtonCell(tableView)
             }
         }
         return UITableViewCell()
     }
     
-    func facebookCell(tableView: UITableView!) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as ButtonCell!
+    func cellForLoginSection(tableView: UITableView, row: Int) -> UITableViewCell {
+        let inset:CGFloat = 10.0
+        
+        switch row {
+        case 0:
+            var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+            cell.textField.placeholder = EMAIL_PROMPT
+            cell.textField.secureTextEntry = false
+            cell.textField.delegate = self
+            cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
+            cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+            return cell
+        case 1:
+            var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+            cell.textField.placeholder = PASSWORD_PROMT
+            cell.textField.secureTextEntry = true
+            cell.textField.returnKeyType = UIReturnKeyType.Go
+            cell.textField.delegate = self
+            cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
+            cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+            return cell
+        case 2:
+            var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+            cell.button.setTitle("Log In", forState: UIControlState.Normal)
+            cell.title = "Log In"
+            cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
+            cell.delegate = self
+            return cell
+        case 3:
+            return facebookButtonCell(tableView)
+        default:
+            return UITableViewCell()
+        }
+    }
+    
+    func signUpButtonCell(tableView: UITableView!) -> ButtonCell {
+        var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+        cell.button.setTitle("Sign Up", forState: UIControlState.Normal)
+        cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
+        cell.title = "Sign Up"
+        cell.delegate = self
+        return cell
+    }
+    
+    func facebookButtonCell(tableView: UITableView!) -> ButtonCell {
+        var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
         cell.button.backgroundColor = UIColor(red: 59/255.0, green: 89/255.0, blue: 152/255.0, alpha: 1.0)
         cell.button.setTitle("Log In With Facebook", forState: UIControlState.Normal)
+        cell.title = "Facebook"
+        cell.delegate = self
         return cell
     }
     
@@ -157,7 +187,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         if isRegistrationMode() {
             switch section {
             case 0:
-                return 5
+                return 4
             case 1:
                 return 3
             case 2:
@@ -170,6 +200,12 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             return 4
         }
         return 0
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if var cell = tableView.cellForRowAtIndexPath(indexPath) as? ToggleCell {
+            cell.toggle(!cell.on(), animated: true)
+        }
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -206,18 +242,125 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         self.title = "Log In"
     }
     
-    func signUp() {
-        let params = ["email":"test@test.com", "password":"asdf1234"]
-        request(.GET, "\(LNT_URL)", parameters: nil).responseString { (request, response, json, error) -> Void in
-            println(response)
-            println(json)
+    @IBAction func textFieldValueChanged(sender: AnyObject) {
+        let textField = sender as! UITextField
+        switch textField.placeholder! {
+        case EMAIL_PROMPT:
+            email = textField.text
+        case PASSWORD_PROMT:
+            password = textField.text
+        case ZIPCODE_PROMPT:
+            zipCode = textField.text
+        default:
+            break
         }
+    }
+    
+    func textChanged(textField: UITextField) {
+        switch textField.placeholder! {
+        case EMAIL_PROMPT:
+            email = textField.text
+        case PASSWORD_PROMT:
+            password = textField.text
+        case ZIPCODE_PROMPT:
+            zipCode = textField.text
+        default:
+            break
+        }
+    }
+    
+    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        switch textField.placeholder! {
+        case EMAIL_PROMPT:
+            email = textField.text
+        case PASSWORD_PROMT:
+            password = textField.text
+        case ZIPCODE_PROMPT:
+            zipCode = textField.text
+        default:
+            break
+        }
+        return true
+    }
+    
+    func signUp() {
+        
+        request(.GET, "\(LNT_URL)/users/sign_up", parameters: nil).responseString { (request, response, json, error) -> Void in
+            let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as! String
+            ServerManager.signUp(csrfToken, email: self.email, password: self.password, zipcode: self.zipCode, usesElectricity: self.usesElectricity, usesWater: self.usesWater, usesNaturalGas: self.usesNaturalGas)
+        }
+    }
+    
+    func login() {
+        request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+            let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String
+            ServerManager.login(csrfToken!, email: self.email, password: self.password)
+        }
+    }
+    
+    func getStats(csrfToken: String) {
+        let authToken = "Yx9z4kQLKErd_RDiiuiE"
+        let email = "derpy@test.com"
+        let params = ["user_token":authToken, "user_email": email, "authenticity_token":csrfToken]
+        request(.GET, "\(LNT_URL)/users/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
+            println(request)
+            println()
+            println(response)
+            println()
+            println(json)
+            println()
+            println(error)
+        }
+    }
+    
+    func postStats(csrfToken: String) {
+        let authToken = "Yx9z4kQLKErd_RDiiuiE"
+        let email = "derpy@test.com"
+        let params = ["user_token":authToken, "user_email": email,
+            "authenticity_token":csrfToken,
+            "electricity_usage": 150,
+            "month": "August",
+            "year": 2015] as [String: AnyObject]
+        
+        request(.POST, "\(LNT_URL)/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
+            println(request)
+            println()
+            println(response)
+            println()
+            println(json)
+            println()
+            println(error)
+        }
+    }
+    
+    func setHomeViewControllerToRoot() {
         let appDelegateTemp = UIApplication.sharedApplication().delegate
-        appDelegateTemp?.window??.rootViewController = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()).instantiateInitialViewController() as? UIViewController
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        appDelegateTemp?.window??.rootViewController = storyboard.instantiateInitialViewController() as? UIViewController
     }
     
     func didPressButtonCell(buttonCell: ButtonCell) {
-        signUp()
+        switch buttonCell.title {
+        case "Log In":
+            login()
+        case "Sign Up":
+            signUp()
+        default:
+            break
+        }
+    }
+    
+    func didToggleCell(toggleCell: ToggleCell, on: Bool) {
+        switch toggleCell.toggleLabel.text! {
+        case "Electricity":
+            usesElectricity = on
+        case "Water":
+            usesWater = on
+        case "Natural Gas":
+            usesNaturalGas = on
+        default:
+            break
+        }
     }
     
     @IBAction func toggleAuthModeButtonPressed(sender: AnyObject) {
