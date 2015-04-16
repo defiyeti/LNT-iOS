@@ -298,20 +298,20 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    func getStats(csrfToken: String) {
-        let authToken = "Yx9z4kQLKErd_RDiiuiE"
-        let email = "derpy@test.com"
-        let params = ["user_token":authToken, "user_email": email, "authenticity_token":csrfToken]
-        request(.GET, "\(LNT_URL)/users/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
-            println(request)
-            println()
-            println(response)
-            println()
-            println(json)
-            println()
-            println(error)
-        }
-    }
+//    func getStats(csrfToken: String) {
+//        let authToken = "Yx9z4kQLKErd_RDiiuiE"
+//        let email = "derpy@test.com"
+//        let params = ["user_token":authToken, "user_email": email, "authenticity_token":csrfToken]
+//        request(.GET, "\(LNT_URL)/users/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
+//            println(request)
+//            println()
+//            println(response)
+//            println()
+//            println(json)
+//            println()
+//            println(error)
+//        }
+//    }
     
     func postStats(csrfToken: String) {
         let authToken = "Yx9z4kQLKErd_RDiiuiE"

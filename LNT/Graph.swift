@@ -103,7 +103,7 @@ class Graph: UIView {
         
         // X & Y Axes
         drawAxes(context, strokeColor: axisColor)
-        
+        println("data first plot first point has \(data.first?.points.first?.value)")
         for plot in data {
             var points = projectPoints(plot.points, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
             drawDataPoints(context, pointRadius: plot.pointRadius, strokeColor: plot.strokeColor, fillColor: plot.strokeColor, points: points)

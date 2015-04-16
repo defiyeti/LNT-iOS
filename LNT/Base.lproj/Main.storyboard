@@ -632,10 +632,10 @@
             </objects>
             <point key="canvasLocation" x="263" y="1284"/>
         </scene>
-        <!--Stat Input View Controller-->
+        <!--Input Usage-->
         <scene sceneID="guo-Nw-dQO">
             <objects>
-                <viewController id="dj7-CI-4Od" customClass="StatInputViewController" customModule="LNT" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Input Usage" id="dj7-CI-4Od" customClass="StatInputViewController" customModule="LNT" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2AK-cK-lOC"/>
                         <viewControllerLayoutGuide type="bottom" id="3cc-pD-iTX"/>
@@ -644,9 +644,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="81" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Dwz-v9-cLv">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="Dwz-v9-cLv">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TextFieldCell" rowHeight="80" id="HYE-4a-UhH" customClass="TextFieldCell" customModule="LNT" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -708,6 +708,7 @@
                                                 <constraint firstItem="Ii9-Jl-uLw" firstAttribute="top" secondItem="a1a-EV-NUr" secondAttribute="topMargin" constant="1" id="wPU-8i-FWw"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="gradientView" destination="Ii9-Jl-uLw" id="OO1-Oa-f8U"/>
                                             <outlet property="label" destination="2tc-5n-onr" id="Qtc-7l-wCS"/>
@@ -741,6 +742,34 @@
                                                 <constraint firstItem="ohZ-4U-zSq" firstAttribute="trailing" secondItem="h52-sI-V4V" secondAttribute="trailingMargin" id="zND-l8-SxG"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PickerCell" rowHeight="175" id="DMK-mf-B7e" customClass="MonthYearPickerCell" customModule="LNT" customModuleProvider="target">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DMK-mf-B7e" id="Kjh-ri-bAD">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uee-27-3WJ">
+                                                    <rect key="frame" x="0.0" y="7" width="320" height="162"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="DMK-mf-B7e" id="v7M-iV-SMt"/>
+                                                        <outlet property="delegate" destination="DMK-mf-B7e" id="pQQ-cG-mFZ"/>
+                                                    </connections>
+                                                </pickerView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="Uee-27-3WJ" secondAttribute="centerX" id="19Z-dy-pel"/>
+                                                <constraint firstItem="Uee-27-3WJ" firstAttribute="top" secondItem="Kjh-ri-bAD" secondAttribute="topMargin" constant="-1" id="XKh-Oj-NiW"/>
+                                                <constraint firstAttribute="centerY" secondItem="Uee-27-3WJ" secondAttribute="centerY" id="bSY-b6-mBQ"/>
+                                                <constraint firstItem="Uee-27-3WJ" firstAttribute="leading" secondItem="Kjh-ri-bAD" secondAttribute="leading" id="slT-ri-Sa9"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="picker" destination="Uee-27-3WJ" id="wFZ-On-ZIc"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>

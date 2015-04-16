@@ -13,6 +13,7 @@
 		A9288B701AD4ACFB00200D11 /* LocksmithRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9288B6F1AD4ACFB00200D11 /* LocksmithRequest.swift */; };
 		A9288B721AD4B55100200D11 /* ServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9288B711AD4B55100200D11 /* ServerManager.swift */; };
 		A947E8D51AD83A8F007B6D17 /* UserEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A947E8D41AD83A8F007B6D17 /* UserEditViewController.swift */; };
+		A94894621ADDDCD200A5DC72 /* MonthYearPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94894611ADDDCD200A5DC72 /* MonthYearPickerCell.swift */; };
 		A987FA321A9AC889009BFF8A /* drop shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA311A9AC889009BFF8A /* drop shadow.png */; };
 		A987FA341A9AC933009BFF8A /* LNT-Drop-Shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA331A9AC933009BFF8A /* LNT-Drop-Shadow.png */; };
 		A987FA361A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png in Resources */ = {isa = PBXBuildFile; fileRef = A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */; };
@@ -55,6 +56,7 @@
 		A9288B6F1AD4ACFB00200D11 /* LocksmithRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocksmithRequest.swift; sourceTree = "<group>"; };
 		A9288B711AD4B55100200D11 /* ServerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerManager.swift; sourceTree = "<group>"; };
 		A947E8D41AD83A8F007B6D17 /* UserEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserEditViewController.swift; sourceTree = "<group>"; };
+		A94894611ADDDCD200A5DC72 /* MonthYearPickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthYearPickerCell.swift; sourceTree = "<group>"; };
 		A987FA311A9AC889009BFF8A /* drop shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drop shadow.png"; sourceTree = "<group>"; };
 		A987FA331A9AC933009BFF8A /* LNT-Drop-Shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow.png"; sourceTree = "<group>"; };
 		A987FA351A9AC9C2009BFF8A /* LNT-Drop-Shadow2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-Drop-Shadow2.png"; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				A9BF93871AC5CCC400D2338F /* Statistic.swift */,
 				A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */,
 				A9FDF7691A9545E200543429 /* Main.storyboard */,
+				A94894611ADDDCD200A5DC72 /* MonthYearPickerCell.swift */,
 				A9D97F351ACB2C730099D1AC /* TipsViewController.swift */,
 				A9D97F371ACB2D6A0099D1AC /* StatInputViewController.swift */,
 				A9FDF76C1A9545E200543429 /* Images.xcassets */,
@@ -307,6 +310,7 @@
 				A947E8D51AD83A8F007B6D17 /* UserEditViewController.swift in Sources */,
 				A9BF938E1AC77F6F00D2338F /* ButtonCell.swift in Sources */,
 				A9D97F381ACB2D6A0099D1AC /* StatInputViewController.swift in Sources */,
+				A94894621ADDDCD200A5DC72 /* MonthYearPickerCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

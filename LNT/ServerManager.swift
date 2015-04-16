@@ -8,8 +8,12 @@
 
 import Foundation
 
+/// NSNotification sent when a user logs in
 let UserDidLoginNotification = "UserDidLoginNotification"
 
+/**
+Manages all server connections
+*/
 class ServerManager {
     
     class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic]) -> ()) {
@@ -33,7 +37,6 @@ class ServerManager {
                 }
                 completion(stats: statistics)
             }
-            completion(stats: [])
         }
     }
     
@@ -68,11 +71,8 @@ class ServerManager {
     :param: usesElectricity     Does the user want to see electricity stats?
     :param: usesWater           Does the user want to see water stats?
     :param: usesNaturalGas      Does the user want to see natural gas stats?
-    
-    :returns: No return value
     */
     class func signUp(csrfToken: String, email: String, password: String, zipcode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) {
-        //TODO: add utility params
         let params = ["user":["email": email, "password": password,
             "zip_code": zipcode, "uses_electricity": usesElectricity, "uses_water": usesWater, "uses_natural_gas": usesNaturalGas],
             "authenticity_token": csrfToken] as [String:AnyObject]
