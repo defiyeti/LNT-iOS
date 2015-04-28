@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A910A61C1AE9BF8B005807A6 /* UserPastDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910A61B1AE9BF8B005807A6 /* UserPastDataViewController.swift */; };
+		A910A61E1AEAD78D005807A6 /* MultilineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910A61D1AEAD78D005807A6 /* MultilineCell.swift */; };
+		A910A6201AEAE10F005807A6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910A61F1AEAE10F005807A6 /* User.swift */; };
 		A9185E281ACF0CFA000229D1 /* LNT-icon-180px.png in Resources */ = {isa = PBXBuildFile; fileRef = A9185E271ACF0CFA000229D1 /* LNT-icon-180px.png */; };
 		A9185E2A1ACF152A000229D1 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9185E291ACF152A000229D1 /* Alamofire.swift */; };
 		A9288B6E1AD4ACE000200D11 /* Locksmith.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9288B6D1AD4ACE000200D11 /* Locksmith.swift */; };
@@ -50,6 +53,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A910A61B1AE9BF8B005807A6 /* UserPastDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPastDataViewController.swift; sourceTree = "<group>"; };
+		A910A61D1AEAD78D005807A6 /* MultilineCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultilineCell.swift; sourceTree = "<group>"; };
+		A910A61F1AEAE10F005807A6 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		A9185E271ACF0CFA000229D1 /* LNT-icon-180px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LNT-icon-180px.png"; sourceTree = "<group>"; };
 		A9185E291ACF152A000229D1 /* Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
 		A9288B6D1AD4ACE000200D11 /* Locksmith.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locksmith.swift; sourceTree = "<group>"; };
@@ -104,6 +110,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A910A6211AEAE21F005807A6 /* Table Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9BF93851AC5C8F500D2338F /* UtilityCell.swift */,
+				A9BF938B1AC604DD00D2338F /* TextFieldCell.swift */,
+				A9BF938D1AC77F6F00D2338F /* ButtonCell.swift */,
+				A9BF938F1AC86B1900D2338F /* ToggleCell.swift */,
+				A910A61D1AEAD78D005807A6 /* MultilineCell.swift */,
+			);
+			name = "Table Cells";
+			sourceTree = "<group>";
+		};
+		A910A6221AEAE233005807A6 /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				A9185E291ACF152A000229D1 /* Alamofire.swift */,
+				A9288B6D1AD4ACE000200D11 /* Locksmith.swift */,
+				A9288B6F1AD4ACFB00200D11 /* LocksmithRequest.swift */,
+			);
+			name = "Third Party";
+			sourceTree = "<group>";
+		};
 		A9FDF7571A9545E200543429 = {
 			isa = PBXGroup;
 			children = (
@@ -134,24 +162,21 @@
 			isa = PBXGroup;
 			children = (
 				A9FDF7651A9545E200543429 /* AppDelegate.swift */,
-				A9185E291ACF152A000229D1 /* Alamofire.swift */,
 				A9FDF7671A9545E200543429 /* HomeViewController.swift */,
 				A9BF93891AC601DB00D2338F /* UserAuthViewController.swift */,
 				A947E8D41AD83A8F007B6D17 /* UserEditViewController.swift */,
+				A910A61B1AE9BF8B005807A6 /* UserPastDataViewController.swift */,
+				A9D97F351ACB2C730099D1AC /* TipsViewController.swift */,
 				A9288B711AD4B55100200D11 /* ServerManager.swift */,
-				A9288B6D1AD4ACE000200D11 /* Locksmith.swift */,
-				A9288B6F1AD4ACFB00200D11 /* LocksmithRequest.swift */,
-				A9BF93851AC5C8F500D2338F /* UtilityCell.swift */,
-				A9BF938B1AC604DD00D2338F /* TextFieldCell.swift */,
-				A9BF938D1AC77F6F00D2338F /* ButtonCell.swift */,
-				A9BF938F1AC86B1900D2338F /* ToggleCell.swift */,
+				A910A6211AEAE21F005807A6 /* Table Cells */,
 				A9D97F391ACB43810099D1AC /* GradientView.swift */,
 				A9BF93871AC5CCC400D2338F /* Statistic.swift */,
 				A9F1881E1AC0B4DE00AC48E1 /* Graph.swift */,
+				A910A61F1AEAE10F005807A6 /* User.swift */,
 				A9FDF7691A9545E200543429 /* Main.storyboard */,
 				A94894611ADDDCD200A5DC72 /* MonthYearPickerCell.swift */,
-				A9D97F351ACB2C730099D1AC /* TipsViewController.swift */,
 				A9D97F371ACB2D6A0099D1AC /* StatInputViewController.swift */,
+				A910A6221AEAE233005807A6 /* Third Party */,
 				A9FDF76C1A9545E200543429 /* Images.xcassets */,
 				A9FDF76E1A9545E200543429 /* LaunchScreen.xib */,
 				A9FDF7631A9545E200543429 /* Supporting Files */,
@@ -194,6 +219,7 @@
 				A9FDF75C1A9545E200543429 /* Sources */,
 				A9FDF75D1A9545E200543429 /* Frameworks */,
 				A9FDF75E1A9545E200543429 /* Resources */,
+				A9FA00DE1AEF4A760055DF48 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -288,6 +314,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A9FA00DE1AEF4A760055DF48 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\n# Auto Increment Version Script\nbuildPlist=\"LNT/Info.plist\"\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" $buildPlist)\nbuildNumber=$(($buildNumber + 1))\nbuilddate=$(date +\"%Y.%m.%d %H:%M:%S\")\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" $buildPlist\n/usr/libexec/PlistBuddy -c \"Set :CFBuildDate $builddate\" $buildPlist";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A9FDF75C1A9545E200543429 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -295,12 +337,14 @@
 			files = (
 				A9288B721AD4B55100200D11 /* ServerManager.swift in Sources */,
 				A9BF93861AC5C8F500D2338F /* UtilityCell.swift in Sources */,
+				A910A61C1AE9BF8B005807A6 /* UserPastDataViewController.swift in Sources */,
 				A9BF93901AC86B1900D2338F /* ToggleCell.swift in Sources */,
 				A9D97F3A1ACB43810099D1AC /* GradientView.swift in Sources */,
 				A9185E2A1ACF152A000229D1 /* Alamofire.swift in Sources */,
 				A9F1881F1AC0B4DE00AC48E1 /* Graph.swift in Sources */,
 				A9FDF7681A9545E200543429 /* HomeViewController.swift in Sources */,
 				A9288B6E1AD4ACE000200D11 /* Locksmith.swift in Sources */,
+				A910A61E1AEAD78D005807A6 /* MultilineCell.swift in Sources */,
 				A9288B701AD4ACFB00200D11 /* LocksmithRequest.swift in Sources */,
 				A9BF938A1AC601DB00D2338F /* UserAuthViewController.swift in Sources */,
 				A9BF93881AC5CCC400D2338F /* Statistic.swift in Sources */,
@@ -311,6 +355,7 @@
 				A9BF938E1AC77F6F00D2338F /* ButtonCell.swift in Sources */,
 				A9D97F381ACB2D6A0099D1AC /* StatInputViewController.swift in Sources */,
 				A94894621ADDDCD200A5DC72 /* MonthYearPickerCell.swift in Sources */,
+				A910A6201AEAE10F005807A6 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,9 +478,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LNT/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -443,9 +493,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = LNT/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

@@ -16,26 +16,123 @@ Manages all server connections
 */
 class ServerManager {
     
-    class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic]) -> ()) {
-        let params = ["user_token": userToken, "user_email": email]//, "authenticity_token":csrfToken]
-         // [{"id":3,"email":"derpy@test.com","authentication_token":"Yx9z4kQLKErd_RDiiuiE","zip_code":75080,"carbon_footprint":150,"carbon_ranking":null,"electricity_ranking":0.25,"water_ranking":0.25,"natural_gas_ranking":0.25,"stats":[{"id":5,"electricity_usage":150,"water_usage":1020,"natural_gas_usage":40,"month":"August","year":2015,"user_id":3,"created_at":"2015-04-07T22:13:12.087Z","updated_at":"2015-04-08T01:09:24.672Z"}]}]
+    class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic], electricityAvg: Int, electricityPercentile: Float, waterAvg: Int, waterPercentile: Float, naturalGasAvg: Int, naturalGasPercentile: Float) -> ()) {
+        let params = ["user_token": userToken, "user_email": email]
         LNT.request(.GET, "\(LNT_URL)/users/stats.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
-            if let jsonArray = json as? NSArray,
-                let jsonDict = jsonArray.firstObject as? NSDictionary {
-                let stats: [[String:AnyObject]] = jsonDict.objectForKey("stats") as! [[String:AnyObject]]
+            if let jsonDict = json as? NSDictionary {
+                let stats: [[String:AnyObject]] = jsonDict.objectForKey("last_twelve_months") as! [[String:AnyObject]]
                 var statistics: [Statistic] = []
                 for stat: [String:AnyObject] in stats {
-                    if let id: Int = stat["id"] as? Int,
-                        let electricityUsage: Int = stat["electricity_usage"] as? Int,
-                        let waterUsage: Int = stat["water_usage"] as? Int,
-                        let naturalGasUsage: Int = stat["natural_gas_usage"] as? Int,
-                        let month: String = stat["month"] as? String,
-                        let year: Int = stat["year"] as? Int {
-                            var s = Statistic(id: id, electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, month: month, year: year, createdAt: NSDate(), updatedAt: NSDate())
+                    if let s = ServerManager.parseStat(stat) {
                             statistics.append(s)
                     }
                 }
-                completion(stats: statistics)
+                let electricity = jsonDict.objectForKey("electricity_ranking") as? NSDictionary
+                let electricityAvg = electricity?.objectForKey("average") as! Int
+                let electricityPercentile = electricity?.objectForKey("percentile") as! Float
+                    
+                let water = jsonDict.objectForKey("water_ranking") as? NSDictionary
+                let waterAvg = water?.objectForKey("average") as! Int
+                let waterPercentile = water?.objectForKey("percentile") as! Float
+                    
+                let naturalGas = jsonDict.objectForKey("natural_gas_ranking") as? NSDictionary
+                let naturalGasAvg = naturalGas?.objectForKey("average") as! Int
+                let naturalGasPercentile = naturalGas?.objectForKey("percentile") as! Float
+                    
+                completion(stats: statistics, electricityAvg: electricityAvg, electricityPercentile: electricityPercentile, waterAvg: waterAvg, waterPercentile: waterPercentile, naturalGasAvg: naturalGasAvg, naturalGasPercentile: naturalGasPercentile)
+            }
+        }
+    }
+    
+    class func updateUser(id: Int, email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) {
+        LNT.request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+            
+            if let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String {
+                ServerManager.updateUser(csrfToken, id: id, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas)
+            }
+        }
+    }
+    
+    private class func updateUser(csrfToken: String, id: Int, email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) {
+        let oldEmail = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
+        let (dictionary, error) = Locksmith.loadDataForUserAccount(oldEmail)
+        let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
+        
+        var userParams = [String: AnyObject]()
+        if !email.isEmpty {
+            userParams["email"] = email
+        }
+        if !password.isEmpty {
+            userParams["password"] = password
+        }
+        if !zipCode.isEmpty {
+            userParams["zip_code"] = zipCode.toInt()
+        }
+        userParams["uses_electricity"] = usesElectricity
+        userParams["uses_water"] = usesWater
+        userParams["uses_natural_gas"] = usesNaturalGas
+        var params = ["user_token":authToken,
+            "user_email": oldEmail,
+            "authenticity_token":csrfToken,
+            "user": userParams] as [String: AnyObject]
+        
+        LNT.request(.PUT, "\(LNT_URL)/users/\(id).json", parameters: params).responseString { (request, response, json, error) -> Void in
+            println(request)
+            println()
+            println(response)
+            println()
+            println(json)
+            println()
+            println(error)
+        }
+        
+    }
+  
+    /**
+    Returns more detailed user information and all stats associated with that account.
+    
+    :param: completion  Completion block with a user object
+    */
+    class func getUserDetails(completion: (user: User) -> ()) {
+        let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
+        let (dictionary, error) = Locksmith.loadDataForUserAccount(email)
+        let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
+        
+        getUserDetails(email, userToken: authToken, completion: completion)
+    }
+    
+    private class func parseStat(stat: [String: AnyObject]) -> Statistic? {
+        if let id: Int = stat["id"] as? Int,
+            let month: Int = stat["month"] as? Int,
+            let year: Int = stat["year"] as? Int {
+                let electricityUsage: Int? = stat["electricity_usage"] as? Int
+                let waterUsage: Int? = stat["water_usage"] as? Int
+                let naturalGasUsage: Int? = stat["natural_gas_usage"] as? Int
+                return Statistic(id: id, electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, month: month, year: year, createdAt: NSDate(), updatedAt: NSDate())
+        }
+        return nil
+    }
+    
+    private class func getUserDetails(email: String!, userToken: String!, completion: (user: User) -> ()) {
+        let params = ["user_token": userToken, "user_email": email]
+        LNT.request(.GET, "\(LNT_URL)/users/show.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
+            if let jsonDict = json as? NSDictionary {
+                var user = User(email: email, zipcode: jsonDict.objectForKey("zip_code") as? String)
+                user.id = jsonDict.objectForKey("id") as? Int
+                user.usesElectricity = jsonDict.objectForKey("uses_electricity") as! Bool
+                user.usesWater = jsonDict.objectForKey("uses_water") as! Bool
+                user.usesNaturalGas = jsonDict.objectForKey("uses_natural_gas") as! Bool
+                var zip = jsonDict.objectForKey("zip_code") as? Int
+                user.zipcode = "\(zip)"
+                let stats: [[String:AnyObject]] = jsonDict.objectForKey("stats") as! [[String:AnyObject]]
+                var statistics: [Statistic] = []
+                for stat: [String:AnyObject] in stats {
+                    if let s = ServerManager.parseStat(stat) {
+                            statistics.append(s)
+                    }
+                }
+                user.stats = statistics.reverse()
+                completion(user: user)
             }
         }
     }
@@ -58,6 +155,7 @@ class ServerManager {
                 NSUserDefaults.standardUserDefaults().setValue(email, forKey: USER_EMAIL_DEFAULTS_KEY)
                 NSNotificationCenter.defaultCenter().postNotificationName(UserDidLoginNotification, object: nil)
             }
+            println(response)
         }
     }
     
@@ -84,6 +182,76 @@ class ServerManager {
                 NSUserDefaults.standardUserDefaults().setValue(email, forKey: USER_EMAIL_DEFAULTS_KEY)
                 NSNotificationCenter.defaultCenter().postNotificationName(UserDidLoginNotification, object: nil)
             }
+            println(response)
+        }
+    }
+    
+    class func postStats(stat: Statistic) {
+        LNT.request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+            
+            if let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String {
+                ServerManager.postStats(csrfToken, stat: stat)
+            }
+        }
+    }
+    
+    private class func postStats(csrfToken: String!, stat: Statistic) {
+        let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
+        let (dictionary, error) = Locksmith.loadDataForUserAccount(email)
+        let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
+        
+        var params = ["user_token":authToken,
+            "user_email": email,
+            "authenticity_token":csrfToken,
+            "month": stat.month,
+            "year": stat.year] as [String: AnyObject]
+        
+        if let electricityUsage = stat.electricityUsage {
+            params["electricity_usage"] = electricityUsage
+        }
+        if let waterUsage = stat.waterUsage {
+            params["water_usage"] = waterUsage
+        }
+        if let naturalGasUsage = stat.naturalGasUsage {
+            params["natural_gas_usage"] = naturalGasUsage
+        }
+        
+        LNT.request(.POST, "\(LNT_URL)/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
+            println(request)
+            println()
+            println(response)
+            println()
+            println(json)
+            println()
+            println(error)
+        }
+    }
+    
+    class func getTips(utility: Utility, completion: (tips: [UtilityTip]) -> ()) {
+        var utilityString = ""
+        switch utility {
+        case Utility.Electricity:
+            utilityString = "electricity"
+        case Utility.Water:
+            utilityString = "water"
+        case Utility.NaturalGas:
+            utilityString = "natural_gas"
+        default:
+            break
+        }
+        LNT.request(.GET, "\(LNT_URL)/utility_tips/\(utilityString).json", parameters: nil).responseJSON { (_, _, json, _) -> Void in
+            var tips: [UtilityTip] = []
+            if let jsonArray = json as? [[String:AnyObject]] {
+                for jsonTip in jsonArray {
+                    if let id: Int = jsonTip["id"] as? Int,
+                        let order: Int = jsonTip["order"] as? Int,
+                        let text: String = jsonTip["text"] as? String {
+                            var tip = UtilityTip(id: id, order: order, text: text)
+                            tips.append(tip)
+                    }
+                }
+            }
+            completion(tips: tips)
         }
     }
 }

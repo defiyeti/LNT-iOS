@@ -12,6 +12,13 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    func logBuildAndVersionNumber() {
+        let dict = NSBundle.mainBundle().infoDictionary as NSDictionary?
+        let buildString: String = dict?.objectForKey("CFBundleVersion") as! String
+        let versionString: String = dict?.objectForKey("CFBundleShortVersionString") as! String
+        print("::: Build " + buildString + ", Version " + versionString + " :::\n")
+    }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -36,6 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var navigation = UINavigationController(rootViewController: rootController)
             self.window?.rootViewController = navigation
         }
+        
+        logBuildAndVersionNumber()
+        
         return true
     }
 

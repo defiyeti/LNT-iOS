@@ -9,14 +9,44 @@
 import Foundation
 import UIKit
 
-class UserEditViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ButtonCellDelegate, UITextFieldDelegate {
+class UserEditViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ButtonCellDelegate, ToggleCellDelegate, UITextFieldDelegate {
     @IBOutlet var tableView: UITableView!
+    var currentUser: User?
+    var email = ""
+    var password = ""
+    var zipCode = ""
+    var usesElectricity = true
+    var usesWater = true
+    var usesNaturalGas = true
+    
+    let EMAIL_TAG = 100
+    let PASSWORD_TAG = 101
+    let ZIPCODE_TAG = 102
+    
+    let ELECTRICITY_TAG = 103
+    let WATER_TAG = 104
+    let NATURAL_GAS_TAG = 105
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
         self.navigationController?.title = "Account Settings"
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
+        ServerManager.getUserDetails { (user) -> () in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.currentUser = user
+                self.zipCode = user.zipcode!
+                self.usesElectricity = user.usesElectricity
+                self.usesWater = user.usesWater
+                self.usesNaturalGas = user.usesNaturalGas
+                self.tableView.reloadData()
+            })
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -33,27 +63,32 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
             switch indexPath.row {
             case 0:
                 var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
-                cell.textField.placeholder = EMAIL_PROMPT
+                cell.textField.placeholder = "Change your email"
                 cell.textField.delegate = self
                 cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
-                
+                cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
                 let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
                 cell.textField.text = email
+                cell.textField.tag = EMAIL_TAG
                 return cell
             case 1:
                 var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
-                cell.textField.placeholder = PASSWORD_PROMT
+                cell.textField.placeholder = "Change your password"
                 cell.textField.secureTextEntry = true
                 cell.textField.delegate = self
+                cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
                 cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+                cell.textField.tag = PASSWORD_TAG
                 return cell
             case 2:
                 var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
-                cell.textField.placeholder = ZIPCODE_PROMPT
+                cell.textField.placeholder = "Change your zipcode"
                 cell.textField.keyboardType = UIKeyboardType.NumberPad
                 cell.textField.secureTextEntry = false
                 cell.textField.delegate = self
+                cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
                 cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+                cell.textField.tag = ZIPCODE_TAG
                 return cell
             case 3:
                 var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
@@ -62,6 +97,11 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceYellow().lighterColor()
                 cell.background.topColor = UIColor.leaveNoTraceYellow()
                 cell.background.bottomColor = UIColor.leaveNoTraceYellow()
+                if currentUser != nil {
+                    cell.toggle(usesElectricity, animated: false)
+                }
+                cell.tag = ELECTRICITY_TAG
+                cell.delegate = self
                 return cell
             case 4:
                 var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
@@ -70,6 +110,11 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceBlue().lighterColor()
                 cell.background.topColor = UIColor.leaveNoTraceBlue()
                 cell.background.bottomColor = UIColor.leaveNoTraceBlue()
+                if currentUser != nil {
+                    cell.toggle(usesWater, animated: false)
+                }
+                cell.tag = WATER_TAG
+                cell.delegate = self
                 return cell
             case 5:
                 var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
@@ -78,6 +123,11 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.toggleSwitch.onTintColor = UIColor(white: 1.0, alpha: 0.5)
                 cell.background.topColor = UIColor.leaveNoTracePink()
                 cell.background.bottomColor = UIColor.leaveNoTracePink()
+                if currentUser != nil {
+                    cell.toggle(usesNaturalGas, animated: false)
+                }
+                cell.tag = NATURAL_GAS_TAG
+                cell.delegate = self
                 return cell
             case 6:
                 var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
@@ -99,6 +149,19 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
             return cell
         }
         return UITableViewCell()
+    }
+    
+    func textChanged(textField: UITextField) {
+        switch textField.tag {
+        case EMAIL_TAG:
+            email = textField.text!
+        case PASSWORD_TAG:
+            password = textField.text!
+        case ZIPCODE_TAG:
+            zipCode = textField.text!
+        default:
+            break
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -134,7 +197,37 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func didPressButtonCell(buttonCell: ButtonCell) {
-        logOut()
+        switch buttonCell.title {
+        case "Log Out":
+            logOut()
+        case "Edit Past Data":
+            self.performSegueWithIdentifier("UserPastDataSegue", sender: nil)
+        case "Update Account":
+            ServerManager.updateUser(currentUser!.id!, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas)
+        default:
+            break
+        }
+    }
+    
+    func didToggleCell(toggleCell: ToggleCell, on: Bool) {
+        switch toggleCell.tag {
+        case ELECTRICITY_TAG:
+            usesElectricity = on
+        case WATER_TAG:
+            usesWater = on
+        case NATURAL_GAS_TAG:
+            usesNaturalGas = on
+        default:
+            break
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        if segue.identifier == "UserPastDataSegue" {
+            var pastDataVC = segue.destinationViewController as! UserPastDataViewController
+            pastDataVC.currentUser = currentUser
+        }
     }
     
     func logOut() {

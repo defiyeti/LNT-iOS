@@ -9,17 +9,17 @@
 import Foundation
 
 class Statistic {
-    let id: Int!
+    let id: Int?
     let electricityUsage: Int?
     let waterUsage: Int?
     let naturalGasUsage: Int?
-    let month: String!
+    let month: Int!
     let year: Int!
     let createdAt: NSDate!
     let updatedAt: NSDate!
     
     init(id: Int!, electricityUsage: Int?, waterUsage: Int?, naturalGasUsage: Int?,
-        month: String!, year: Int!, createdAt: NSDate!, updatedAt: NSDate!) {
+        month: Int!, year: Int!, createdAt: NSDate!, updatedAt: NSDate!) {
             self.id = id
             self.electricityUsage = electricityUsage
             self.waterUsage = waterUsage
@@ -28,5 +28,17 @@ class Statistic {
             self.year = year
             self.createdAt = createdAt
             self.updatedAt = updatedAt
+    }
+    
+    init(electricityUsage: Int?, waterUsage: Int?, naturalGasUsage: Int?,
+        month: Int!, year: Int!) {
+            self.id = nil
+            self.electricityUsage = electricityUsage
+            self.waterUsage = waterUsage
+            self.naturalGasUsage = naturalGasUsage
+            self.month = month
+            self.year = year
+            self.createdAt = NSDate()
+            self.updatedAt = NSDate()
     }
 }

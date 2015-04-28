@@ -19,6 +19,15 @@ class ToggleCell: UITableViewCell {
     @IBOutlet var toggleSwitch: UISwitch!
     @IBOutlet var background: GradientView!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        toggleSwitch.addTarget(self, action: "changeSwitch:", forControlEvents: UIControlEvents.ValueChanged)
+    }
+    
+    func changeSwitch(sender: UISwitch) {
+        delegate?.didToggleCell(self, on: sender.on)
+    }
+    
     func toggle(on: Bool, animated: Bool) {
         toggleSwitch.setOn(on, animated: animated)
         delegate?.didToggleCell(self, on: on)

@@ -67,14 +67,10 @@ class Graph: UIView {
     // MARK: - X Axis
     @IBInspectable var xMin: CGFloat = 0
     @IBInspectable var xMax: CGFloat = 100
-    @IBInspectable var xIncrements: Int = 1
-    @IBInspectable var showsXMinorAxes: Bool = false
     
     // MARK: - Y Axis
     @IBInspectable var yMin: CGFloat = 0
     @IBInspectable var yMax: CGFloat = 100
-    @IBInspectable var yIncrements: Int = 1
-    @IBInspectable var showsYMinorAxes: Bool = false
     
     // @IBDesignable: Padding
     // MARK: - Padding
@@ -87,6 +83,8 @@ class Graph: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.clearColor()
+//        self.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight
+//        self.contentMode = UIViewContentMode.Redraw
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -103,7 +101,6 @@ class Graph: UIView {
         
         // X & Y Axes
         drawAxes(context, strokeColor: axisColor)
-        println("data first plot first point has \(data.first?.points.first?.value)")
         for plot in data {
             var points = projectPoints(plot.points, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
             drawDataPoints(context, pointRadius: plot.pointRadius, strokeColor: plot.strokeColor, fillColor: plot.strokeColor, points: points)
@@ -113,6 +110,11 @@ class Graph: UIView {
         drawLabels()
         
         CGContextRestoreGState(context)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.setNeedsDisplay()
     }
     
     func drawGradient() {
@@ -134,13 +136,15 @@ class Graph: UIView {
     
     func drawAxes(context: CGContextRef, strokeColor: UIColor) {
         CGContextSetLineWidth(context, axisWidth)
-        let lines = [CGPoint(x: leftPadding, y: topPadding),
-            CGPoint(x: leftPadding, y: self.bounds.height - bottomPadding),
-            CGPoint(x: leftPadding, y: self.bounds.height - bottomPadding),
+        let topLine = [CGPoint(x: leftPadding, y: topPadding),
+            CGPoint(x: self.bounds.width - rightPadding, y: topPadding)]
+        let bottomLine = [CGPoint(x: leftPadding, y: self.bounds.height - bottomPadding),
             CGPoint(x: self.bounds.width - rightPadding, y: self.bounds.height - bottomPadding)]
         
-        CGContextAddLines(context, lines, 4)
+        CGContextAddLines(context, topLine, 2)
+        CGContextAddLines(context, bottomLine, 2)
         CGContextSetStrokeColorWithColor(context, axisColor.CGColor)
+        CGContextSetLineWidth(context, 1.0)
         CGContextSetShouldAntialias(context, false)
         CGContextStrokePath(context)
     }
