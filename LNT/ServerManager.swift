@@ -16,7 +16,7 @@ Manages all server connections
 */
 class ServerManager {
     
-    class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic], electricityAvg: Int, electricityPercentile: Float, waterAvg: Int, waterPercentile: Float, naturalGasAvg: Int, naturalGasPercentile: Float) -> ()) {
+    class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic], electricityRanking: [String:AnyObject], waterRanking: [String:AnyObject], naturalGasRankings: [String:AnyObject], carbonFootprintRanking: [String:AnyObject]) -> ()) {
         let params = ["user_token": userToken, "user_email": email]
         LNT.request(.GET, "\(LNT_URL)/users/stats.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
             if let jsonDict = json as? NSDictionary {
@@ -27,19 +27,12 @@ class ServerManager {
                             statistics.append(s)
                     }
                 }
-                let electricity = jsonDict.objectForKey("electricity_ranking") as? NSDictionary
-                let electricityAvg = electricity?.objectForKey("average") as! Int
-                let electricityPercentile = electricity?.objectForKey("percentile") as! Float
+                let electricity = (jsonDict.objectForKey("electricity_ranking") as? NSDictionary) as? [String:AnyObject]
+                let water = (jsonDict.objectForKey("water_ranking") as? NSDictionary) as? [String:AnyObject]
+                let naturalGas = (jsonDict.objectForKey("natural_gas_ranking") as? NSDictionary) as? [String:AnyObject]
+                let carbonFootprint = (jsonDict.objectForKey("carbon_ranking") as? NSDictionary) as? [String:AnyObject]
                     
-                let water = jsonDict.objectForKey("water_ranking") as? NSDictionary
-                let waterAvg = water?.objectForKey("average") as! Int
-                let waterPercentile = water?.objectForKey("percentile") as! Float
-                    
-                let naturalGas = jsonDict.objectForKey("natural_gas_ranking") as? NSDictionary
-                let naturalGasAvg = naturalGas?.objectForKey("average") as! Int
-                let naturalGasPercentile = naturalGas?.objectForKey("percentile") as! Float
-                    
-                completion(stats: statistics, electricityAvg: electricityAvg, electricityPercentile: electricityPercentile, waterAvg: waterAvg, waterPercentile: waterPercentile, naturalGasAvg: naturalGasAvg, naturalGasPercentile: naturalGasPercentile)
+                completion(stats: statistics, electricityRanking: electricity!, waterRanking: water!, naturalGasRankings: naturalGas!, carbonFootprintRanking: carbonFootprint!)
             }
         }
     }
@@ -108,7 +101,8 @@ class ServerManager {
                 let electricityUsage: Int? = stat["electricity_usage"] as? Int
                 let waterUsage: Int? = stat["water_usage"] as? Int
                 let naturalGasUsage: Int? = stat["natural_gas_usage"] as? Int
-                return Statistic(id: id, electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, month: month, year: year, createdAt: NSDate(), updatedAt: NSDate())
+                let carbonFootprint: Int? = stat["carbon_footprint"] as? Int
+                return Statistic(id: id, electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, carbonFootprint: carbonFootprint, month: month, year: year, createdAt: NSDate(), updatedAt: NSDate())
         }
         return nil
     }
@@ -148,6 +142,7 @@ class ServerManager {
     */
     class func login(csrf: String, email: String!, password: String!) {
         let params = ["user":["email": email, "password": password], "authenticity_token":csrf] as [String:AnyObject]
+        println(params)
         request(.POST, "\(LNT_URL)/users/sign_in", parameters: params).responseString { (request, response, json, error) -> Void in
             let authToken = response?.allHeaderFields["X-Auth-Token"] as? String
             if authToken != nil {
@@ -186,16 +181,16 @@ class ServerManager {
         }
     }
     
-    class func postStats(stat: Statistic) {
+    class func postStats(stat: Statistic, completion: () -> ()) {
         LNT.request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
             
             if let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String {
-                ServerManager.postStats(csrfToken, stat: stat)
+                ServerManager.postStats(csrfToken, stat: stat, completion: completion)
             }
         }
     }
     
-    private class func postStats(csrfToken: String!, stat: Statistic) {
+    private class func postStats(csrfToken: String!, stat: Statistic, completion: () -> ()) {
         let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
         let (dictionary, error) = Locksmith.loadDataForUserAccount(email)
         let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
@@ -217,13 +212,7 @@ class ServerManager {
         }
         
         LNT.request(.POST, "\(LNT_URL)/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
-            println(request)
-            println()
-            println(response)
-            println()
-            println(json)
-            println()
-            println(error)
+            completion
         }
     }
     

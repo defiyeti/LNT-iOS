@@ -8,50 +8,6 @@
 
 import UIKit
 
-extension UIColor {
-    class func leaveNoTraceGreen() -> UIColor! {
-        return UIColor(red: 96/255.0, green: 199/255.0, blue: 5/255.0, alpha: 1.0)
-    }
-    
-    class func leaveNoTraceYellow() -> UIColor! {
-        return UIColor(red: 255/255.0, green: 205/255.0, blue: 62/255.0, alpha: 1.0)
-    }
-    
-    class func leaveNoTraceBlue() -> UIColor! {
-        return UIColor(red: 0/255.0, green: 204/255.0, blue: 255/255.0, alpha: 1.0)
-    }
-    
-    class func leaveNoTracePink() -> UIColor! {
-        return UIColor(red: 230/255.0, green: 0/255.0, blue: 210/255.0, alpha: 1.0)
-    }
-    
-    func darkerColor() -> UIColor {
-        var amount: CGFloat = 0.9
-        var rgba = UnsafeMutablePointer<CGFloat>.alloc(4)
-        
-        self.getRed(&rgba[0], green: &rgba[1], blue: &rgba[2], alpha: &rgba[3])
-        var darkerColor = UIColor(red: amount*rgba[0], green: amount*rgba[1], blue: amount*rgba[2], alpha: rgba[3])
-        
-        rgba.destroy()
-        rgba.dealloc(4)
-        return darkerColor
-    }
-    
-    func lighterColor() -> UIColor {
-        var amount: CGFloat = 1.2
-        var r = UnsafeMutablePointer<CGFloat>.alloc(1)
-        var g = UnsafeMutablePointer<CGFloat>.alloc(1)
-        var b = UnsafeMutablePointer<CGFloat>.alloc(1)
-        var a = UnsafeMutablePointer<CGFloat>.alloc(1)
-        self.getRed(r, green: g, blue: b, alpha: a)
-        var lighterColor = UIColor(red: min(1.0, amount*r.memory), green: min(1.0, amount*g.memory), blue: min(1.0, amount*b.memory), alpha: a.memory)
-        
-        r.destroy(); g.destroy(); b.destroy(); a.destroy()
-        r.dealloc(1); g.dealloc(1); b.dealloc(1); a.dealloc(1)
-        return lighterColor
-    }
-}
-
 enum Utility {
     case CarbonFootprint, Electricity, Water, NaturalGas;
 }
@@ -64,13 +20,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var electricityData: [(Int, CGFloat)] = []
     var waterData: [(Int, CGFloat)] = []
     var naturalGasData: [(Int, CGFloat)] = []
+    var carbonFootprintData: [(Int, CGFloat)] = []
     
     var electricityAvg = 0
+    var electricityUserAvg = 0
     var electricityPercentile: Float = 0.0
+    
     var waterAvg = 0
+    var waterUserAvg = 0
     var waterPercentile: Float = 0.0
+    
     var naturalGasAvg = 0
+    var naturalGasUserAvg = 0
     var naturalGasPercentile: Float = 0.0
+    
+    var carbonFootprintAvg = 0
+    var carbonFootprintUserAvg = 0
+    var carbonFootprintPercentile: Float = 0.0
     
     var selectedUtility: Utility = Utility.Electricity
     
@@ -111,22 +77,34 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        let completion = {(stats: [Statistic], electricityAvg: Int, electricityPercentile: Float, waterAvg: Int, waterPercentile: Float, naturalGasAvg: Int, naturalGasPercentile: Float) -> () in
+        let completion = {(stats: [Statistic], electricityRanking: [String:AnyObject], waterRanking: [String:AnyObject], naturalGasRanking: [String:AnyObject], carbonFootprintRanking: [String:AnyObject]) -> () in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.electricityData = []
                 self.waterData = []
                 self.naturalGasData = []
+                self.carbonFootprintData = []
                 for stat in stats {
                     self.electricityData.append(stat.month!, CGFloat(stat.electricityUsage!))
                     self.waterData.append(stat.month!, CGFloat(stat.waterUsage!))
                     self.naturalGasData.append(stat.month!, CGFloat(stat.naturalGasUsage!))
+                    self.carbonFootprintData.append(stat.month!, CGFloat(stat.carbonFootprint!))
                 }
-                self.electricityAvg = electricityAvg
-                self.electricityPercentile = electricityPercentile
-                self.waterAvg = waterAvg
-                self.waterPercentile = waterPercentile
-                self.naturalGasAvg = naturalGasAvg
-                self.naturalGasPercentile = naturalGasPercentile
+                self.electricityAvg = electricityRanking["average"] as! Int
+                self.electricityUserAvg = electricityRanking["your_average"] as! Int
+                self.electricityPercentile = electricityRanking["percentile"] as! Float
+                
+                self.waterAvg = waterRanking["average"] as! Int
+                self.waterUserAvg = waterRanking["your_average"] as! Int
+                self.waterPercentile = waterRanking["percentile"] as! Float
+                
+                self.naturalGasAvg = naturalGasRanking["average"] as! Int
+                self.naturalGasUserAvg = naturalGasRanking["your_average"] as! Int
+                self.naturalGasPercentile = naturalGasRanking["percentile"] as! Float
+                
+                self.carbonFootprintAvg = carbonFootprintRanking["average"] as! Int
+                self.carbonFootprintUserAvg = carbonFootprintRanking["your_average"] as! Int
+                self.carbonFootprintPercentile = carbonFootprintRanking["percentile"] as! Float
+                
                 self.tableView.reloadData()
                 self.tableView.setNeedsDisplay()
             })
@@ -228,37 +206,43 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch utility {
         case Utility.CarbonFootprint:
             cell.utilityName = "Carbon Footprint"
-            cell.yourConsumptionLabel.text = "Your Footprint"
-            cell.localAverageLabel.text = "Local Average"
+            if let (_, lastData) = electricityData.last {
+                cell.yourConsumptionLabel.text = "Your Average Consumption\n\(carbonFootprintUserAvg) kg CO2 (\(percentileString(carbonFootprintPercentile)))"
+                cell.localAverageLabel.text = "Local Average\n\(carbonFootprintAvg) kg CO2"
+            }
             cell.background.topColor = UIColor.leaveNoTraceGreen()
             cell.background.bottomColor = UIColor.leaveNoTraceGreen().darkerColor()
-            points = []
+            cell.protoGraphView.yMiddle = CGFloat(carbonFootprintUserAvg)
+            points = dataToPoints(carbonFootprintData)
         case Utility.Electricity:
             cell.utilityName = "Electricity"
             if let (_, lastData) = electricityData.last {
-                cell.yourConsumptionLabel.text = "Your Consumption\n\(Int(lastData)) kW/hr (\(percentileString(electricityPercentile)))"
+                cell.yourConsumptionLabel.text = "Your Average Consumption\n\(electricityUserAvg) kW/hr (\(percentileString(electricityPercentile)))"
                 cell.localAverageLabel.text = "Local Average\n\(electricityAvg) kW/hr"
             }
             cell.background.topColor = UIColor.leaveNoTraceYellow()
             cell.background.bottomColor = UIColor.leaveNoTraceYellow().darkerColor()
+            cell.protoGraphView.yMiddle = CGFloat(electricityAvg)
             points = dataToPoints(electricityData)
         case Utility.Water:
             cell.utilityName = "Water"
             if let (_, lastData) = waterData.last {
-                cell.yourConsumptionLabel.text = "Your Consumption\n\(Int(lastData)) gallons (\(percentileString(waterPercentile)))"
+                cell.yourConsumptionLabel.text = "Your Average Consumption\n\(waterUserAvg) gallons (\(percentileString(waterPercentile)))"
                 cell.localAverageLabel.text = "Local Average\n\(waterAvg) gallons"
             }
             cell.background.topColor = UIColor.leaveNoTraceBlue()
             cell.background.bottomColor = UIColor.leaveNoTraceBlue().darkerColor()
+            cell.protoGraphView.yMiddle = CGFloat(waterAvg)
             points = dataToPoints(waterData)
         case Utility.NaturalGas:
             cell.utilityName = "Natural Gas"
             if let (_, lastData) = naturalGasData.last {
-                cell.yourConsumptionLabel.text = "Your Consumption\n\(Int(lastData)) CCF (\(percentileString(naturalGasPercentile)))"
+                cell.yourConsumptionLabel.text = "Your Average Consumption\n\(naturalGasUserAvg) CCF (\(percentileString(naturalGasPercentile)))"
                 cell.localAverageLabel.text = "Local Average\n\(naturalGasAvg) CCF"
             }
             cell.background.topColor = UIColor.leaveNoTracePink()
             cell.background.bottomColor = UIColor.leaveNoTracePink().darkerColor()
+            cell.protoGraphView.yMiddle = CGFloat(naturalGasAvg)
             points = dataToPoints(naturalGasData)
         default:
             break

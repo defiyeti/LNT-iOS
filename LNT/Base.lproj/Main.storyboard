@@ -38,16 +38,16 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UtilityCell" rowHeight="300" id="4tM-AY-4nQ" customClass="UtilityCell" customModule="LNT" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UtilityCell" rowHeight="320" id="4tM-AY-4nQ" customClass="UtilityCell" customModule="LNT" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4tM-AY-4nQ" id="yzR-qA-KgR">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N2i-H1-tcI" customClass="GradientView" customModule="LNT" customModuleProvider="target">
-                                                    <rect key="frame" x="8" y="8" width="304" height="292"/>
+                                                    <rect key="frame" x="8" y="8" width="304" height="312"/>
                                                     <subviews>
                                                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6i0-V6-GVJ" customClass="Graph" customModule="LNT" customModuleProvider="target">
-                                                            <rect key="frame" x="8" y="163" width="288" height="121"/>
+                                                            <rect key="frame" x="8" y="163" width="288" height="141"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="color" keyPath="axisColor">
                                                                     <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -71,18 +71,18 @@
                                                                     <real key="value" value="0.0"/>
                                                                 </userDefinedRuntimeAttribute>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="yMax">
-                                                                    <real key="value" value="300"/>
+                                                                    <real key="value" value="100"/>
                                                                 </userDefinedRuntimeAttribute>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="bottomPadding">
-                                                                    <real key="value" value="15"/>
+                                                                    <real key="value" value="25"/>
                                                                 </userDefinedRuntimeAttribute>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="leftPadding">
                                                                     <real key="value" value="15"/>
                                                                 </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="topColor">
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="bottomColor">
                                                                     <color key="value" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                 </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="bottomColor">
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="topColor">
                                                                     <color key="value" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
@@ -460,23 +460,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="HhV-iE-cPu">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="83" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="HhV-iE-cPu">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TipCell" textLabel="Vr2-Sp-g8v" style="IBUITableViewCellStyleDefault" id="Nud-DM-Msb">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TipCell" rowHeight="83" id="Nud-DM-Msb" customClass="TextViewCell" customModule="LNT" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Nud-DM-Msb" id="y4E-iC-nZq">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vr2-Sp-g8v">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HlC-qu-f7c">
+                                                    <rect key="frame" x="10" y="0.0" width="300" height="82"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
+                                                </textView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="HlC-qu-f7c" firstAttribute="top" secondItem="y4E-iC-nZq" secondAttribute="top" id="3wh-e0-ubq"/>
+                                                <constraint firstItem="HlC-qu-f7c" firstAttribute="leading" secondItem="y4E-iC-nZq" secondAttribute="leading" constant="10" id="4Xf-B0-f7E"/>
+                                                <constraint firstAttribute="trailing" secondItem="HlC-qu-f7c" secondAttribute="trailing" constant="10" id="5of-wP-LMB"/>
+                                                <constraint firstAttribute="bottom" secondItem="HlC-qu-f7c" secondAttribute="bottom" id="lhm-t6-jpu"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="textView" destination="HlC-qu-f7c" id="Txp-L4-SEU"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>

@@ -59,22 +59,19 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             if indexPath.section == 0 {
                 switch indexPath.row {
                 case 0:
-                    var cell = facebookButtonCell(tableView)
-                    return cell
-                case 1:
                     var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                     cell.textField.placeholder = EMAIL_PROMPT
                     cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
                     return cell
-                case 2:
+                case 1:
                     var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                     cell.textField.placeholder = PASSWORD_PROMT
                     cell.textField.secureTextEntry = true
                     cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
                     return cell
-                case 3:
+                case 2:
                     var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                     cell.textField.placeholder = ZIPCODE_PROMPT
                     cell.textField.keyboardType = UIKeyboardType.NumberPad
@@ -154,8 +151,6 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
             cell.delegate = self
             return cell
-        case 3:
-            return facebookButtonCell(tableView)
         default:
             return UITableViewCell()
         }
@@ -187,7 +182,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         if isRegistrationMode() {
             switch section {
             case 0:
-                return 4
+                return 3
             case 1:
                 return 3
             case 2:
@@ -197,7 +192,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         else if activeMode == UserAuthViewMode.Login {
-            return 4
+            return 3
         }
         return 0
     }

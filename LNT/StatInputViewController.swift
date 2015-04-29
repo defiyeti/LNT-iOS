@@ -167,7 +167,11 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func didPressButtonCell(buttonCell: ButtonCell) {
-        let stat = Statistic(electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, month: month, year: year)
-        ServerManager.postStats(stat)
+        let stat = Statistic(electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, carbonFootprint: nil, month: month, year: year)
+        ServerManager.postStats(stat, completion: { () -> () in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.navigationController?.popViewControllerAnimated(true)
+            })
+        })
     }
 }

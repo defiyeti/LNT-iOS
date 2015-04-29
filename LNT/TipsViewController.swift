@@ -34,12 +34,35 @@ class TipsViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("TipCell") as! UITableViewCell
-        cell.textLabel?.text = tips[indexPath.row].text
+        var cell = tableView.dequeueReusableCellWithIdentifier("TipCell") as! TextViewCell
+        cell.textView?.text = tips[indexPath.row].text
+        let width = cell.textView?.frame.size.width
+//        cell.textView?.frame.size = CGSize(width: width!, height: heightForTextView(tips[indexPath.row].text))
+        cell.textView?.frame = (tips[indexPath.row].text as NSString).boundingRectWithSize(CGSize(width: width!, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(17)], context: nil)
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tips.count
+    }
+    /*
+    - (CGFloat)heightForTextView:(UITextView*)textView containingString:(NSString*)string
+    {
+    float horizontalPadding = 24;
+    float verticalPadding = 16;
+    float widthOfTextView = textView.contentSize.width - horizontalPadding;
+    float height = [string sizeWithFont:[UIFont systemFontOfSize:kFontSize] constrainedToSize:CGSizeMake(widthOfTextView, 999999.0f) lineBreakMode:NSLineBreakByWordWrapping].height + verticalPadding;
+    
+    return height;
+    }
+    */
+    
+    func heightForTextView(string: String) -> CGFloat {
+        return (string as NSString).sizeWithAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17)]).height
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        let width = self.tableView.frame.size.width - 20
+        return (tips[indexPath.row].text as NSString).boundingRectWithSize(CGSize(width: width, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(17)], context: nil).size.height + 20
     }
 }

@@ -71,6 +71,7 @@ class Graph: UIView {
     // MARK: - Y Axis
     @IBInspectable var yMin: CGFloat = 0
     @IBInspectable var yMax: CGFloat = 100
+    var yMiddle: CGFloat = 0.0
     
     // @IBDesignable: Padding
     // MARK: - Padding
@@ -105,9 +106,12 @@ class Graph: UIView {
             var points = projectPoints(plot.points, xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax)
             drawDataPoints(context, pointRadius: plot.pointRadius, strokeColor: plot.strokeColor, fillColor: plot.strokeColor, points: points)
             drawLines(plot.strokeWidth, strokeColor: plot.strokeColor, points: points)
+            drawPointLabels(points, plot: plot)
         }
         
         drawLabels()
+        drawUpperScaleLabel()
+        drawLowerScaleLabel()
         
         CGContextRestoreGState(context)
     }
@@ -135,6 +139,9 @@ class Graph: UIView {
     }
     
     func drawAxes(context: CGContextRef, strokeColor: UIColor) {
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSaveGState(context)
+        
         CGContextSetLineWidth(context, axisWidth)
         let topLine = [CGPoint(x: leftPadding, y: topPadding),
             CGPoint(x: self.bounds.width - rightPadding, y: topPadding)]
@@ -147,6 +154,94 @@ class Graph: UIView {
         CGContextSetLineWidth(context, 1.0)
         CGContextSetShouldAntialias(context, false)
         CGContextStrokePath(context)
+        
+        let kDashedPhase: CGFloat = 0.0
+        let kDashedLinesLength = UnsafePointer<CGFloat>([8.0, 4.0])
+        let kDashedCount = 2
+        
+        var y = topPadding + (yAxisLength - (((yMiddle - yMin) / (yMax - yMin)) * yAxisLength))
+        let middleLine = [CGPoint(x: leftPadding, y: y), CGPoint(x: self.bounds.width - rightPadding, y: y)]
+        CGContextAddLines(context, middleLine, 2)
+        CGContextSetStrokeColorWithColor(context, axisColor.CGColor)
+        CGContextSetLineWidth(context, 1.0)
+        CGContextSetLineDash(context, kDashedPhase, kDashedLinesLength, kDashedCount)
+        CGContextSetShouldAntialias(context, false)
+        CGContextStrokePath(context)
+        
+        CGContextRestoreGState(context)
+    }
+    
+    func abbreviatedMonth(month: Int) -> String {
+        let months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        return months[month]
+    }
+    
+    func drawUpperScaleLabel() {
+        let label = "\(Int(yMax))"
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSaveGState(context)
+        
+        var attributes = [NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+            NSFontAttributeName : UIFont.systemFontOfSize(11)]
+        var xAxisLabel = NSMutableAttributedString(string: label, attributes: attributes as [NSObject : AnyObject])
+        var line = CTLineCreateWithAttributedString(xAxisLabel)
+        let bounds = CTLineGetBoundsWithOptions(line, CTLineBoundsOptions.UseOpticalBounds)
+        let xn = bounds.width/2
+        let yn = bounds.midY
+        CGContextSetTextPosition(context, self.bounds.width - rightPadding - bounds.width, self.bounds.height - topPadding - bounds.height)
+        
+        CGContextTranslateCTM(context, 0.0, self.frame.height)
+        CGContextScaleCTM(context, 1.0, -1.0)
+        CTLineDraw(line, context);
+        
+        CGContextRestoreGState(context)
+    }
+    
+    func drawLowerScaleLabel() {
+        let label = "\(Int(yMin))"
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSaveGState(context)
+        
+        var attributes = [NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+            NSFontAttributeName : UIFont.systemFontOfSize(11)]
+        var xAxisLabel = NSMutableAttributedString(string: label, attributes: attributes as [NSObject : AnyObject])
+        var line = CTLineCreateWithAttributedString(xAxisLabel)
+        let bounds = CTLineGetBoundsWithOptions(line, CTLineBoundsOptions.UseOpticalBounds)
+        let xn = bounds.width/2
+        let yn = bounds.midY
+        CGContextSetTextPosition(context, self.bounds.width - rightPadding - bounds.width, bottomPadding + yn)
+        
+        CGContextTranslateCTM(context, 0.0, self.frame.height)
+        CGContextScaleCTM(context, 1.0, -1.0)
+        CTLineDraw(line, context);
+        
+        CGContextRestoreGState(context)
+    }
+    
+    func drawPointLabels(points: [(CGFloat, CGFloat)], plot: Plot) {
+        for var i = 0; i < points.count; i++ {
+            if i % 4 == 0 {
+                let text = abbreviatedMonth(plot.points[i].object as! Int)
+                
+                let context = UIGraphicsGetCurrentContext()
+                CGContextSaveGState(context)
+                
+                var attributes = [NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+                    NSFontAttributeName : UIFont.systemFontOfSize(17)]
+                var xAxisLabel = NSMutableAttributedString(string: text, attributes: attributes as [NSObject : AnyObject])
+                var line = CTLineCreateWithAttributedString(xAxisLabel)
+                let bounds = CTLineGetBoundsWithOptions(line, CTLineBoundsOptions.UseOpticalBounds)
+                let xn = bounds.width/2
+                let yn = bounds.midY
+                CGContextSetTextPosition(context, points[i].0 - xn, bottomPadding - bounds.height)
+                
+                CGContextTranslateCTM(context, 0.0, self.frame.height)
+                CGContextScaleCTM(context, 1.0, -1.0)
+                CTLineDraw(line, context);
+                
+                CGContextRestoreGState(context)
+            }
+        }
     }
     
     func projectPoints(points: [Point], xMin: CGFloat, yMin: CGFloat, xMax: CGFloat, yMax: CGFloat) -> [(CGFloat, CGFloat)] {
@@ -156,10 +251,11 @@ class Graph: UIView {
         var p: [(CGFloat, CGFloat)] = []
         var i = 0.0
         let xIncrement = CGFloat(xAxisLength) / CGFloat(points.count)
+        let xOffset = xIncrement / 2.0
         
         for point in points {
 //            var x = leftPadding + ((point.0 - xMin) / xRange) * xAxisLength
-            let amount = CGFloat(xIncrement) * CGFloat(i)
+            let amount = CGFloat(xIncrement) * CGFloat(i) + xOffset
             var x = leftPadding + amount
             var y = topPadding + (yAxisLength - (((point.value - yMin) / yRange) * yAxisLength))
             p.insert((x,y), atIndex: p.count)
@@ -246,16 +342,17 @@ class Graph: UIView {
     
     override func prepareForInterfaceBuilder() {
         var plot = Plot()
-        for var i = 0.0; i < 100.0; i += 0.5 {
-            var y = 8*sin(i) + 40
+//        for var i = 0.0; i < 100.0; i += 5 {
+//            var y = 8*sin(i) + 40
+//            var point = Point(object: i, value: CGFloat(y))
+//            plot.points.insert(point, atIndex: plot.points.count)
+//        }
+        for var i = 0.0; i < 100.0; i += 50 {
+            var y = i
             var point = Point(object: i, value: CGFloat(y))
             plot.points.insert(point, atIndex: plot.points.count)
         }
-//        for var i = 0.0; i < 100.0; i += 1 {
-//            var y = i
-//            plot.points.insert((CGFloat(i), CGFloat(y)), atIndex: plot.points.count)
-//        }
-        xAxisLabel = "X Axis Stuff"
+//        xAxisLabel = "X Axis Stuff"
         plot.strokeColor = UIColor.whiteColor()
         plot.pointRadius = 0.0
         plot.strokeWidth = 2.0
