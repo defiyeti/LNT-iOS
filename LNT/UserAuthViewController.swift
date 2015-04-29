@@ -63,6 +63,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.textField.placeholder = EMAIL_PROMPT
                     cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+                    cell.selectionStyle = UITableViewCellSelectionStyle.None
                     return cell
                 case 1:
                     var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
@@ -70,6 +71,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.textField.secureTextEntry = true
                     cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+                    cell.selectionStyle = UITableViewCellSelectionStyle.None
                     return cell
                 case 2:
                     var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
@@ -78,43 +80,41 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.textField.secureTextEntry = false
                     cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+                    cell.selectionStyle = UITableViewCellSelectionStyle.None
                     return cell
                 default:
                     return UITableViewCell()
                 }
             }
             else if indexPath.section == 1 {
+                var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                 switch indexPath.row {
                 case 0:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     cell.toggleLabel.text = "Electricity"
                     cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceYellow().lighterColor()
                     cell.background.topColor = UIColor.leaveNoTraceYellow()
                     cell.background.bottomColor = UIColor.leaveNoTraceYellow()
                     cell.delegate = self
-                    return cell
                 case 1:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     cell.toggleLabel.text = "Water"
                     cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceBlue().lighterColor()
                     cell.background.topColor = UIColor.leaveNoTraceBlue()
                     cell.background.bottomColor = UIColor.leaveNoTraceBlue()
                     cell.delegate = self
-                    return cell
                 case 2:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     cell.toggleLabel.text = "Natural Gas"
                     cell.toggleSwitch.onTintColor = UIColor(white: 1.0, alpha: 0.5)
                     cell.background.topColor = UIColor.leaveNoTracePink()
                     cell.background.bottomColor = UIColor.leaveNoTracePink()
                     cell.delegate = self
-                    return cell
                 default:
                     return UITableViewCell()
                 }
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                return cell
             }
             else if indexPath.section == 2 {
                 return signUpButtonCell(tableView)
@@ -134,6 +134,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             cell.textField.delegate = self
             cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
             cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         case 1:
             var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
@@ -143,6 +144,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             cell.textField.delegate = self
             cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
             cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         case 2:
             var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
@@ -150,6 +152,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             cell.title = "Log In"
             cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
             cell.delegate = self
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         default:
             return UITableViewCell()
@@ -158,6 +161,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     
     func signUpButtonCell(tableView: UITableView!) -> ButtonCell {
         var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.button.setTitle("Sign Up", forState: UIControlState.Normal)
         cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
         cell.title = "Sign Up"
@@ -167,6 +171,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     
     func facebookButtonCell(tableView: UITableView!) -> ButtonCell {
         var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.button.backgroundColor = UIColor(red: 59/255.0, green: 89/255.0, blue: 152/255.0, alpha: 1.0)
         cell.button.setTitle("Log In With Facebook", forState: UIControlState.Normal)
         cell.title = "Facebook"
@@ -279,17 +284,64 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func signUp() {
-        
-        request(.GET, "\(LNT_URL)/users/sign_up", parameters: nil).responseString { (request, response, json, error) -> Void in
-            let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as! String
-            ServerManager.signUp(csrfToken, email: self.email, password: self.password, zipcode: self.zipCode, usesElectricity: self.usesElectricity, usesWater: self.usesWater, usesNaturalGas: self.usesNaturalGas)
+        if self.email.isEmpty || !isValidEmail(self.email){
+            alertValidEmail()
+        }
+        else if self.password.isEmpty {
+            alertValidPassword()
+        }
+        else if self.zipCode.isEmpty || !isValidZipcode(self.zipCode){
+            alertValidZipcode()
+        }
+        else {
+            request(.GET, "\(LNT_URL)/users/sign_up", parameters: nil).responseString { (request, response, json, error) -> Void in
+                let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as! String
+                ServerManager.signUp(csrfToken, email: self.email, password: self.password, zipcode: self.zipCode, usesElectricity: self.usesElectricity, usesWater: self.usesWater, usesNaturalGas: self.usesNaturalGas)
+            }
         }
     }
     
+    func isValidZipcode(testStr: String) -> Bool {
+        let zipcodeRegex = "^[0-9]{5}(-[0-9]{4})?"
+        
+        let zipcodeTest = NSPredicate(format:"SELF MATCHES %@", zipcodeRegex)
+        return zipcodeTest.evaluateWithObject(testStr)
+    }
+    
+    func isValidEmail(testStr: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+        
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluateWithObject(testStr)
+    }
+    
+    func alertValidEmail() {
+        var alert = UIAlertView(title: "Error", message: "Valid email required.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+    }
+    
+    func alertValidPassword() {
+        var alert = UIAlertView(title: "Error", message: "Enter a password.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+    }
+    
+    func alertValidZipcode() {
+        var alert = UIAlertView(title: "Error", message: "Enter a valid zipcode.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+    }
+    
     func login() {
-        request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
-            let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String
-            ServerManager.login(csrfToken!, email: self.email, password: self.password)
+        if self.email.isEmpty {
+            alertValidEmail()
+        }
+        else if self.password.isEmpty {
+            alertValidPassword()
+        }
+        else {
+            request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+                let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String
+                ServerManager.login(csrfToken!, email: self.email, password: self.password)
+            }
         }
     }
     
