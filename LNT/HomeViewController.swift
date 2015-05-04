@@ -12,9 +12,17 @@ enum Utility {
     case CarbonFootprint, Electricity, Water, NaturalGas;
 }
 
+var displayElectricity = true
+var displayWater = true
+var displayNaturalGas = true
+
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
+    
+    let ELECTRICITY_TAG = 100
+    let WATER_TAG = 101
+    let NATURAL_GAS_TAG = 102
     
     var activeData: [Statistic] = []
     var electricityData: [(Int, CGFloat)] = []
@@ -73,11 +81,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.tableView.reloadData()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        let completion = {(stats: [Statistic], electricityRanking: [String:AnyObject], waterRanking: [String:AnyObject], naturalGasRanking: [String:AnyObject], carbonFootprintRanking: [String:AnyObject]) -> () in
+        let completion = {(stats: [Statistic], electricityRanking: [String:AnyObject], waterRanking: [String:AnyObject], naturalGasRanking: [String:AnyObject], carbonFootprintRanking: [String:AnyObject], usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) -> () in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.electricityData = []
                 self.waterData = []
@@ -105,6 +114,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.carbonFootprintUserAvg = carbonFootprintRanking["your_average"] as! Int
                 self.carbonFootprintPercentile = carbonFootprintRanking["percentile"] as! Float
                 
+                displayElectricity = usesElectricity
+                displayWater = usesWater
+                displayNaturalGas = usesNaturalGas
+                
                 self.tableView.reloadData()
                 self.tableView.setNeedsDisplay()
             })
@@ -130,18 +143,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             var cell = utilityCell(tableView, utility: Utility.Electricity)
             return cell
         case 2:
-            return reduceUsageCell(tableView, utility: Utility.Electricity)
-        case 3:
             var cell = utilityCell(tableView, utility: Utility.Water)
             return cell
-        case 4:
-            return reduceUsageCell(tableView, utility: Utility.Water)
-        case 5:
+        case 3:
             var cell = utilityCell(tableView, utility: Utility.NaturalGas)
             return cell
-        case 6:
-            return reduceUsageCell(tableView, utility: Utility.NaturalGas)
-        case 7:
+        case 4:
             var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
@@ -203,6 +210,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier("UtilityCell") as! UtilityCell
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         var points: [Graph.Point] = []
+        var limit = 0.5 as Float
+        var shouldHide = true
         switch utility {
         case Utility.CarbonFootprint:
             cell.utilityName = "Carbon Footprint"
@@ -214,39 +223,57 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.background.bottomColor = UIColor.leaveNoTraceGreen().darkerColor()
             cell.protoGraphView.yMiddle = CGFloat(carbonFootprintUserAvg)
             points = dataToPoints(carbonFootprintData)
+            carbonFootprintData.isEmpty ? cell.startLoading() : cell.stopLoading()
         case Utility.Electricity:
             cell.utilityName = "Electricity"
             if let (_, lastData) = electricityData.last {
                 cell.yourConsumptionLabel.text = "Your Average Consumption\n\(electricityUserAvg) kW/hr (\(percentileString(electricityPercentile)))"
                 cell.localAverageLabel.text = "Local Average\n\(electricityAvg) kW/hr"
             }
+            cell.usageAlertButton.tag = ELECTRICITY_TAG
+            shouldHide = (electricityPercentile < limit)
             cell.background.topColor = UIColor.leaveNoTraceYellow()
             cell.background.bottomColor = UIColor.leaveNoTraceYellow().darkerColor()
             cell.protoGraphView.yMiddle = CGFloat(electricityAvg)
             points = dataToPoints(electricityData)
+            electricityData.isEmpty ? cell.startLoading() : cell.stopLoading()
+            hideUtility(utility, shouldHide: !displayElectricity)
         case Utility.Water:
             cell.utilityName = "Water"
             if let (_, lastData) = waterData.last {
                 cell.yourConsumptionLabel.text = "Your Average Consumption\n\(waterUserAvg) gallons (\(percentileString(waterPercentile)))"
                 cell.localAverageLabel.text = "Local Average\n\(waterAvg) gallons"
             }
+            cell.usageAlertButton.tag = WATER_TAG
+            shouldHide = (waterPercentile < limit)
             cell.background.topColor = UIColor.leaveNoTraceBlue()
             cell.background.bottomColor = UIColor.leaveNoTraceBlue().darkerColor()
             cell.protoGraphView.yMiddle = CGFloat(waterAvg)
             points = dataToPoints(waterData)
+            waterData.isEmpty ? cell.startLoading() : cell.stopLoading()
+            hideUtility(utility, shouldHide: !displayWater)
         case Utility.NaturalGas:
             cell.utilityName = "Natural Gas"
             if let (_, lastData) = naturalGasData.last {
                 cell.yourConsumptionLabel.text = "Your Average Consumption\n\(naturalGasUserAvg) CCF (\(percentileString(naturalGasPercentile)))"
                 cell.localAverageLabel.text = "Local Average\n\(naturalGasAvg) CCF"
             }
+            cell.usageAlertButton.tag = NATURAL_GAS_TAG
+            shouldHide = (naturalGasPercentile < limit)
             cell.background.topColor = UIColor.leaveNoTracePink()
             cell.background.bottomColor = UIColor.leaveNoTracePink().darkerColor()
             cell.protoGraphView.yMiddle = CGFloat(naturalGasAvg)
             points = dataToPoints(naturalGasData)
+            naturalGasData.isEmpty ? cell.startLoading() : cell.stopLoading()
+            hideUtility(utility, shouldHide: !displayNaturalGas)
         default:
             break
         }
+        
+        var image = UIImage(named: "notification_icon@2x.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        cell.usageAlertButton.setImage(image, forState: UIControlState.Normal)
+        cell.tintColor = UIColor.whiteColor()
+        cell.usageAlertButton.hidden = shouldHide
         
         if points.count > 1 {
             var plot = Graph.Plot()
@@ -259,27 +286,32 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.protoGraphView.yMin = minValue(points) * 0.75
             cell.protoGraphView.yMax = maxValue(points) * 1.25
             cell.protoGraphView.hidden = false
-            utilityCellHeights[utility] = 300
+            utilityCellHeights[utility] = utilityCellHeights[utility] != 0 ? 300 : 0
             cell.protoGraphView.setNeedsDisplay()
             cell.background.setNeedsDisplay()
         }
         else {
             cell.protoGraphView.hidden = true
-            utilityCellHeights[utility] = 180
+            utilityCellHeights[utility] = utilityCellHeights[utility] != 0 ? 180 : 0
         }
+        cell.hidden = utilityCellHeights[utility] == 0
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        switch indexPath.row {
-        case 2:
+    func hideUtility(utility: Utility, shouldHide: Bool) {
+        utilityCellHeights[utility] = shouldHide ? 0 : 180
+    }
+    
+    @IBAction func pressedUsageAlertButton(sender: UIButton) {
+        switch sender.tag {
+        case ELECTRICITY_TAG:
             selectedUtility = Utility.Electricity
-        case 4:
+        case WATER_TAG:
             selectedUtility = Utility.Water
-        case 6:
+        case NATURAL_GAS_TAG:
             selectedUtility = Utility.NaturalGas
         default:
-            break
+            selectedUtility = Utility.Electricity
         }
         performSegueWithIdentifier("ShowTipsSegue", sender: self)
     }
@@ -315,22 +347,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 1:
             return utilityCellHeights[Utility.Electricity]!
         case 2:
-            return electricityPercentile > 0.5 ? 60 : 0
-        case 3:
             return utilityCellHeights[Utility.Water]!
-        case 4:
-            return waterPercentile > 0.5 ? 60 : 0
-        case 5:
+        case 3:
             return utilityCellHeights[Utility.NaturalGas]!
-        case 6:
-            return naturalGasPercentile > 0.5 ? 60 : 0
         default:
             return 60
         }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return 5
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {

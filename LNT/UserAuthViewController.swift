@@ -283,6 +283,19 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         return true
     }
     
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        switch activeMode {
+        case UserAuthViewMode.Login:
+            login()
+        case UserAuthViewMode.Registration:
+            signUp()
+        default:
+            break
+        }
+        textField.endEditing(true)
+        return true
+    }
+    
     func signUp() {
         if self.email.isEmpty || !isValidEmail(self.email){
             alertValidEmail()
@@ -338,10 +351,9 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             alertValidPassword()
         }
         else {
-            request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
-                let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String
-                ServerManager.login(csrfToken!, email: self.email, password: self.password)
-            }
+            ServerManager.login(self.email, password: self.password, completion: { (error: NSError?) -> () in
+                
+            })
         }
     }
     

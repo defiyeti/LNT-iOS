@@ -87,8 +87,10 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         else if indexPath.section == 1 {
             var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+            cell.title = "Submit"
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             cell.delegate = self
+            cell.loadingIndicator.hidden = true
             return cell
         }
         return UITableViewCell()
@@ -168,9 +170,18 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func didPressButtonCell(buttonCell: ButtonCell) {
         let stat = Statistic(electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, carbonFootprint: nil, month: month, year: year)
-        ServerManager.postStats(stat, completion: { () -> () in
+        buttonCell.startLoading()
+        ServerManager.postStats(stat, completion: { (error: NSError?) -> () in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.navigationController?.popViewControllerAnimated(true)
+                if error == nil {
+                    buttonCell.stopLoading()
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+                else {
+                    buttonCell.stopLoading()
+                    let alertView = UIAlertView(title: "Error", message: "Network connection failed. Please try again.", delegate: nil, cancelButtonTitle: "OK")
+                    alertView.show()
+                }
             })
         })
     }

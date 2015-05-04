@@ -15,6 +15,16 @@ class UserPastDataViewController: UIViewController, UITableViewDelegate, UITable
     
     let months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        ServerManager.getUserDetails { (user) -> () in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.currentUser = user
+                self.tableView.reloadData()
+            })
+        }
+    }
+    
     func multilineCell(tableView: UITableView, stat: Statistic) -> MultilineCell {
         var cell = tableView.dequeueReusableCellWithIdentifier("MultilineCell") as! MultilineCell
         cell.title = "\(months[stat.month]), \(stat.year)"

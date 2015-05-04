@@ -135,18 +135,45 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fe0-mW-wUQ">
+                                                    <rect key="frame" x="257" y="14" width="36" height="36"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="36" id="X6q-tZ-wAv"/>
+                                                        <constraint firstAttribute="width" constant="36" id="bwA-Ma-mfk"/>
+                                                    </constraints>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <state key="normal" image="notification_icon.png">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.CornerRadius">
+                                                            <integer key="value" value="18"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="pressedUsageAlertButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="xng-oe-kvd"/>
+                                                    </connections>
+                                                </button>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="LDe-IS-4or">
+                                                    <rect key="frame" x="146" y="74" width="37" height="37"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="LDe-IS-4or" firstAttribute="top" secondItem="nL4-Z0-3If" secondAttribute="bottom" constant="24" id="0U2-Um-cAg"/>
                                                 <constraint firstItem="N2i-H1-tcI" firstAttribute="trailing" secondItem="eXR-1e-UcE" secondAttribute="trailing" id="Azv-2p-9JQ"/>
                                                 <constraint firstItem="j3J-1J-6Rp" firstAttribute="top" secondItem="eXR-1e-UcE" secondAttribute="bottom" constant="11" id="CqJ-L6-fPf"/>
+                                                <constraint firstItem="LDe-IS-4or" firstAttribute="centerX" secondItem="eXR-1e-UcE" secondAttribute="centerX" id="EcO-zj-F0H"/>
                                                 <constraint firstItem="j3J-1J-6Rp" firstAttribute="leading" secondItem="yzR-qA-KgR" secondAttribute="leadingMargin" constant="9" id="GJV-fV-xNA"/>
                                                 <constraint firstItem="nL4-Z0-3If" firstAttribute="leading" secondItem="eXR-1e-UcE" secondAttribute="leading" id="LSh-Pz-gMm"/>
                                                 <constraint firstItem="eXR-1e-UcE" firstAttribute="leading" secondItem="j3J-1J-6Rp" secondAttribute="leading" id="SNF-dJ-Svr"/>
                                                 <constraint firstItem="eXR-1e-UcE" firstAttribute="trailing" secondItem="j3J-1J-6Rp" secondAttribute="trailing" id="ffG-fR-IvD"/>
+                                                <constraint firstAttribute="trailing" secondItem="fe0-mW-wUQ" secondAttribute="trailing" constant="27" id="jDd-xL-xMQ"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="N2i-H1-tcI" secondAttribute="bottom" constant="-8" id="nzg-3N-rjJ"/>
                                                 <constraint firstItem="nL4-Z0-3If" firstAttribute="top" secondItem="yzR-qA-KgR" secondAttribute="topMargin" constant="4" id="see-Xc-LL8"/>
                                                 <constraint firstItem="N2i-H1-tcI" firstAttribute="leading" secondItem="yzR-qA-KgR" secondAttribute="leadingMargin" id="tiR-36-76P"/>
                                                 <constraint firstItem="nL4-Z0-3If" firstAttribute="trailing" secondItem="eXR-1e-UcE" secondAttribute="trailing" id="u3e-jn-QLs"/>
+                                                <constraint firstItem="fe0-mW-wUQ" firstAttribute="top" secondItem="yzR-qA-KgR" secondAttribute="top" constant="14" id="vwX-0X-rCi"/>
                                                 <constraint firstItem="N2i-H1-tcI" firstAttribute="top" secondItem="nL4-Z0-3If" secondAttribute="top" constant="-4" id="vxd-ji-ijZ"/>
                                                 <constraint firstItem="j3J-1J-6Rp" firstAttribute="trailing" secondItem="yzR-qA-KgR" secondAttribute="trailingMargin" id="xlx-2l-iX5"/>
                                                 <constraint firstItem="eXR-1e-UcE" firstAttribute="top" secondItem="nL4-Z0-3If" secondAttribute="bottom" constant="-1" id="zmD-9Y-xdr"/>
@@ -154,9 +181,11 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="background" destination="N2i-H1-tcI" id="C3M-ZR-lwQ"/>
+                                            <outlet property="loadingIndicator" destination="LDe-IS-4or" id="mcC-8c-e4q"/>
                                             <outlet property="localAverageLabel" destination="j3J-1J-6Rp" id="l8j-nB-twh"/>
                                             <outlet property="protoGraphView" destination="6i0-V6-GVJ" id="s5a-l2-d1z"/>
                                             <outlet property="titleLabel" destination="nL4-Z0-3If" id="Ymq-ZG-c1s"/>
+                                            <outlet property="usageAlertButton" destination="fe0-mW-wUQ" id="g44-QO-uj5"/>
                                             <outlet property="yourConsumptionLabel" destination="eXR-1e-UcE" id="Vvo-EY-yhF"/>
                                         </connections>
                                     </tableViewCell>
@@ -581,9 +610,14 @@
                                                         <action selector="didPressButton:" destination="b6i-jo-fTx" eventType="touchUpInside" id="veW-DL-y45"/>
                                                     </connections>
                                                 </button>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="yJI-jd-lUT">
+                                                    <rect key="frame" x="150" y="20" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="i37-Pl-Yph" firstAttribute="trailing" secondItem="0gj-ot-9zC" secondAttribute="trailingMargin" id="K93-Oq-YbI"/>
+                                                <constraint firstItem="yJI-jd-lUT" firstAttribute="centerX" secondItem="i37-Pl-Yph" secondAttribute="centerX" id="lIO-Kj-ofC"/>
+                                                <constraint firstItem="yJI-jd-lUT" firstAttribute="centerY" secondItem="i37-Pl-Yph" secondAttribute="centerY" id="muE-Lu-y9Q"/>
                                                 <constraint firstItem="i37-Pl-Yph" firstAttribute="top" secondItem="0gj-ot-9zC" secondAttribute="topMargin" id="nOu-yg-wIb"/>
                                                 <constraint firstItem="i37-Pl-Yph" firstAttribute="leading" secondItem="0gj-ot-9zC" secondAttribute="leadingMargin" id="qde-oA-tAM"/>
                                                 <constraint firstItem="i37-Pl-Yph" firstAttribute="bottom" secondItem="0gj-ot-9zC" secondAttribute="bottomMargin" id="y3U-H4-peD"/>
@@ -592,6 +626,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="button" destination="i37-Pl-Yph" id="OIP-PR-1iG"/>
+                                            <outlet property="loadingIndicator" destination="yJI-jd-lUT" id="Azg-PZ-YPX"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ToggleCell" rowHeight="60" id="GO1-Zl-XES" customClass="ToggleCell" customModule="LNT" customModuleProvider="target">
@@ -884,15 +919,24 @@
                                                         <action selector="didPressButton:" destination="taN-O0-L2S" eventType="touchUpInside" id="tiS-1C-FLz"/>
                                                     </connections>
                                                 </button>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Cv2-5g-Dal">
+                                                    <rect key="frame" x="150" y="20" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ohZ-4U-zSq" firstAttribute="leading" secondItem="h52-sI-V4V" secondAttribute="leadingMargin" id="36i-kX-I7m"/>
+                                                <constraint firstItem="Cv2-5g-Dal" firstAttribute="centerY" secondItem="ohZ-4U-zSq" secondAttribute="centerY" id="3EJ-TQ-Kxw"/>
+                                                <constraint firstItem="Cv2-5g-Dal" firstAttribute="centerX" secondItem="ohZ-4U-zSq" secondAttribute="centerX" id="8aG-JS-6dJ"/>
                                                 <constraint firstItem="ohZ-4U-zSq" firstAttribute="bottom" secondItem="h52-sI-V4V" secondAttribute="bottomMargin" id="ZQd-lk-wiS"/>
                                                 <constraint firstItem="ohZ-4U-zSq" firstAttribute="top" secondItem="h52-sI-V4V" secondAttribute="topMargin" id="oFE-iP-I5d"/>
                                                 <constraint firstItem="ohZ-4U-zSq" firstAttribute="trailing" secondItem="h52-sI-V4V" secondAttribute="trailingMargin" id="zND-l8-SxG"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="button" destination="ohZ-4U-zSq" id="EWF-ce-Ynj"/>
+                                            <outlet property="loadingIndicator" destination="Cv2-5g-Dal" id="Yv5-DC-DwO"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PickerCell" rowHeight="175" id="DMK-mf-B7e" customClass="MonthYearPickerCell" customModule="LNT" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -942,6 +986,9 @@
             <point key="canvasLocation" x="710" y="898"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="notification_icon.png" width="30" height="30"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="mFh-GR-Pmy"/>
     </inferredMetricsTieBreakers>

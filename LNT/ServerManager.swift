@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// NSNotification sent when a user logs in
 let UserDidLoginNotification = "UserDidLoginNotification"
@@ -16,9 +17,10 @@ Manages all server connections
 */
 class ServerManager {
     
-    class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic], electricityRanking: [String:AnyObject], waterRanking: [String:AnyObject], naturalGasRankings: [String:AnyObject], carbonFootprintRanking: [String:AnyObject]) -> ()) {
+    class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic], electricityRanking: [String:AnyObject], waterRanking: [String:AnyObject], naturalGasRankings: [String:AnyObject], carbonFootprintRanking: [String:AnyObject], usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) -> ()) {
         let params = ["user_token": userToken, "user_email": email]
         LNT.request(.GET, "\(LNT_URL)/users/stats.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
+            println(json)
             if let jsonDict = json as? NSDictionary {
                 let stats: [[String:AnyObject]] = jsonDict.objectForKey("last_twelve_months") as! [[String:AnyObject]]
                 var statistics: [Statistic] = []
@@ -31,22 +33,30 @@ class ServerManager {
                 let water = (jsonDict.objectForKey("water_ranking") as? NSDictionary) as? [String:AnyObject]
                 let naturalGas = (jsonDict.objectForKey("natural_gas_ranking") as? NSDictionary) as? [String:AnyObject]
                 let carbonFootprint = (jsonDict.objectForKey("carbon_ranking") as? NSDictionary) as? [String:AnyObject]
+                
+                let usesElectricity = jsonDict.objectForKey("uses_electricity") as! Bool
+                let usesWater = jsonDict.objectForKey("uses_water") as! Bool
+                let usesNaturalGas = jsonDict.objectForKey("uses_natural_gas") as! Bool
                     
-                completion(stats: statistics, electricityRanking: electricity!, waterRanking: water!, naturalGasRankings: naturalGas!, carbonFootprintRanking: carbonFootprint!)
+                completion(stats: statistics, electricityRanking: electricity!, waterRanking: water!, naturalGasRankings: naturalGas!, carbonFootprintRanking: carbonFootprint!, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas)
             }
         }
     }
     
-    class func updateUser(id: Int, email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) {
+    class func updateUser(id: Int, email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool, completion: (error: NSError?) -> ()) {
         LNT.request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
             
             if let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String {
-                ServerManager.updateUser(csrfToken, id: id, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas)
+                ServerManager.updateUser(csrfToken, id: id, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas, completion: completion)
+            }
+            else {
+                let error = NSError(domain: NSURLErrorDomain, code: -1005, userInfo: nil)
+                completion(error: error)
             }
         }
     }
     
-    private class func updateUser(csrfToken: String, id: Int, email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) {
+    private class func updateUser(csrfToken: String, id: Int, email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool, completion: (error: NSError?) -> ()) {
         let oldEmail = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
         let (dictionary, error) = Locksmith.loadDataForUserAccount(oldEmail)
         let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
@@ -70,15 +80,8 @@ class ServerManager {
             "user": userParams] as [String: AnyObject]
         
         LNT.request(.PUT, "\(LNT_URL)/users/\(id).json", parameters: params).responseString { (request, response, json, error) -> Void in
-            println(request)
-            println()
-            println(response)
-            println()
-            println(json)
-            println()
-            println(error)
+            completion(error: error)
         }
-        
     }
   
     /**
@@ -131,26 +134,58 @@ class ServerManager {
         }
     }
     
+    class func alertNoInternetConnection() {
+        var alert = UIAlertView(title: "Error", message: "Cannot connect to the server. Please check your network settings and try again.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+    }
+    
+    class func alertLoginFailed() {
+        var alert = UIAlertView(title: "Error", message: "Username/password credentials invalid.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+    }
+    
     /**
     Logs the user in
-
-    :param: csrf            CSRF Token
+    
     :param: email           E-mail address
     :param: password        User's password
-
+    :param: completion      Block to be executed after completion of login
+    
     :returns: No return value
     */
-    class func login(csrf: String, email: String!, password: String!) {
+    class func login(email: String!, password: String!, completion: (error: NSError?) -> ()) {
+        request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+            let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String
+            if csrfToken == nil || error != nil {
+                completion(error: error)
+                if error?.code == -1004 {
+                    ServerManager.alertNoInternetConnection()
+                }
+            }
+            else {
+                ServerManager.login(csrfToken!, email: email, password: password, completion: completion)
+            }
+        }
+    }
+
+    private class func login(csrf: String, email: String!, password: String!, completion: (error: NSError?) -> ()) {
         let params = ["user":["email": email, "password": password], "authenticity_token":csrf] as [String:AnyObject]
         println(params)
         request(.POST, "\(LNT_URL)/users/sign_in", parameters: params).responseString { (request, response, json, error) -> Void in
             let authToken = response?.allHeaderFields["X-Auth-Token"] as? String
+            completion(error: error)
+            println(response)
+            println(response?.statusCode)
+            if response?.statusCode == 401 {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    ServerManager.alertLoginFailed()
+                })
+            }
             if authToken != nil {
                 let error = Locksmith.saveData([USER_TOKEN_KEY: authToken!], forUserAccount: email)
                 NSUserDefaults.standardUserDefaults().setValue(email, forKey: USER_EMAIL_DEFAULTS_KEY)
                 NSNotificationCenter.defaultCenter().postNotificationName(UserDidLoginNotification, object: nil)
             }
-            println(response)
         }
     }
     
@@ -181,16 +216,20 @@ class ServerManager {
         }
     }
     
-    class func postStats(stat: Statistic, completion: () -> ()) {
+    class func postStats(stat: Statistic, completion: (error: NSError?) -> ()) {
         LNT.request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
             
             if let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String {
                 ServerManager.postStats(csrfToken, stat: stat, completion: completion)
             }
+            else {
+                let error = NSError(domain: NSURLErrorDomain, code: -1005, userInfo: nil)
+                completion(error: error)
+            }
         }
     }
     
-    private class func postStats(csrfToken: String!, stat: Statistic, completion: () -> ()) {
+    private class func postStats(csrfToken: String!, stat: Statistic, completion: (error: NSError?) -> ()) {
         let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
         let (dictionary, error) = Locksmith.loadDataForUserAccount(email)
         let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
@@ -212,7 +251,7 @@ class ServerManager {
         }
         
         LNT.request(.POST, "\(LNT_URL)/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
-            completion
+            completion(error: error)
         }
     }
     

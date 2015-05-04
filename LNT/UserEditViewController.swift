@@ -57,6 +57,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.button.backgroundColor = UIColor.leaveNoTracePink()
                 cell.title = "Log Out"
                 cell.delegate = self
+                cell.loadingIndicator.hidden = true
                 return cell
         }
         if indexPath.section == 1 {
@@ -135,6 +136,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
                 cell.title = "Update Account"
                 cell.delegate = self
+                cell.loadingIndicator.hidden = true
                 return cell
             default:
                 return UITableViewCell()
@@ -146,6 +148,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
             cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
             cell.title = "Edit Past Data"
             cell.delegate = self
+            cell.loadingIndicator.hidden = true
             return cell
         }
         return UITableViewCell()
@@ -203,7 +206,22 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
         case "Edit Past Data":
             self.performSegueWithIdentifier("UserPastDataSegue", sender: nil)
         case "Update Account":
-            ServerManager.updateUser(currentUser!.id!, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas)
+            buttonCell.startLoading()
+            ServerManager.updateUser(currentUser!.id!, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas, completion: { (error) -> () in
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        if error == nil {
+                            buttonCell.stopLoading()
+                            displayElectricity = self.usesElectricity
+                            displayWater = self.usesWater
+                            displayNaturalGas = self.usesNaturalGas
+                        }
+                        else {
+                            buttonCell.stopLoading()
+                            let alertView = UIAlertView(title: "Error", message: "Network connection failed. Please try again.", delegate: nil, cancelButtonTitle: "OK")
+                            alertView.show()
+                        }
+                    })
+                })
         default:
             break
         }
