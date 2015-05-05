@@ -342,17 +342,11 @@ class Graph: UIView {
     
     override func prepareForInterfaceBuilder() {
         var plot = Plot()
-//        for var i = 0.0; i < 100.0; i += 5 {
-//            var y = 8*sin(i) + 40
-//            var point = Point(object: i, value: CGFloat(y))
-//            plot.points.insert(point, atIndex: plot.points.count)
-//        }
         for var i = 0.0; i < 100.0; i += 50 {
             var y = i
             var point = Point(object: i, value: CGFloat(y))
             plot.points.insert(point, atIndex: plot.points.count)
         }
-//        xAxisLabel = "X Axis Stuff"
         plot.strokeColor = UIColor.whiteColor()
         plot.pointRadius = 0.0
         plot.strokeWidth = 2.0

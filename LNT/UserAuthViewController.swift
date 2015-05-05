@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
+/** Current IP of the DigitalOcean droplet. This should be replaced with a domain when available.*/
 let LNT_URL = "http://45.55.129.205"
+
 let USER_TOKEN_KEY = "user_token"
 let USER_EMAIL_DEFAULTS_KEY = "UserLoginEmail"
 
@@ -17,6 +19,9 @@ let EMAIL_PROMPT = "Enter your email"
 let PASSWORD_PROMT = "Enter your password"
 let ZIPCODE_PROMPT = "Enter your zip code"
 
+/**
+Manages the login/signup view and related functions
+*/
 class UserAuthViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ButtonCellDelegate, ToggleCellDelegate, UITextFieldDelegate {
     
     enum UserAuthViewMode {
@@ -36,6 +41,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     var usesWater = true
     var usesNaturalGas = true
     
+    //MARK: - View Setup/Control
     override func viewDidLoad() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -49,6 +55,13 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setHomeViewControllerToRoot", name: UserDidLoginNotification, object: nil)
     }
     
+    func setHomeViewControllerToRoot() {
+        let appDelegateTemp = UIApplication.sharedApplication().delegate
+        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        appDelegateTemp?.window??.rootViewController = storyboard.instantiateInitialViewController() as? UIViewController
+    }
+    
+    //MARK: - TableViewDelegate Functions
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let inset:CGFloat = 10.0
         
@@ -169,16 +182,6 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         return cell
     }
     
-    func facebookButtonCell(tableView: UITableView!) -> ButtonCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-        cell.button.backgroundColor = UIColor(red: 59/255.0, green: 89/255.0, blue: 152/255.0, alpha: 1.0)
-        cell.button.setTitle("Log In With Facebook", forState: UIControlState.Normal)
-        cell.title = "Facebook"
-        cell.delegate = self
-        return cell
-    }
-    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
     }
@@ -203,6 +206,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        // Toggle the cell when tapped if it is indeed a ToggleCell
         if var cell = tableView.cellForRowAtIndexPath(indexPath) as? ToggleCell {
             cell.toggle(!cell.on(), animated: true)
         }
@@ -220,6 +224,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         return isRegistrationMode() ? 3 : 1
     }
     
+    //MARK: - Login/Registration Helper Functions
     func isRegistrationMode() -> Bool {
         return activeMode == UserAuthViewMode.Registration
     }
@@ -242,6 +247,53 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         self.title = "Log In"
     }
     
+    func register() {
+        if self.email.isEmpty || !isValidEmail(self.email){
+            alertValidEmail()
+        }
+        else if self.password.isEmpty {
+            alertValidPassword()
+        }
+        else if self.zipCode.isEmpty || !isValidZipcode(self.zipCode){
+            alertValidZipcode()
+        }
+        else {
+            ServerManager.signUp(self.email, password: self.password, zipCode: self.zipCode, usesElectricity: self.usesElectricity, usesWater: self.usesWater, usesNaturalGas: self.usesNaturalGas)
+        }
+    }
+    
+    func login() {
+        if self.email.isEmpty {
+            alertValidEmail()
+        }
+        else if self.password.isEmpty {
+            alertValidPassword()
+        }
+        else {
+            ServerManager.login(self.email, password: self.password, completion: { (error: NSError?) -> () in
+                if error != nil {
+                    println(error)
+                }
+            })
+        }
+    }
+    
+    //MARK: Regex Validation
+    func isValidZipcode(testStr: String) -> Bool {
+        let zipcodeRegex = "^[0-9]{5}(-[0-9]{4})?"
+        
+        let zipcodeTest = NSPredicate(format:"SELF MATCHES %@", zipcodeRegex)
+        return zipcodeTest.evaluateWithObject(testStr)
+    }
+    
+    func isValidEmail(testStr: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+        
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluateWithObject(testStr)
+    }
+    
+    //MARK: - TextFieldDelegate Functions
     @IBAction func textFieldValueChanged(sender: AnyObject) {
         let textField = sender as! UITextField
         switch textField.placeholder! {
@@ -288,7 +340,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         case UserAuthViewMode.Login:
             login()
         case UserAuthViewMode.Registration:
-            signUp()
+            register()
         default:
             break
         }
@@ -296,99 +348,13 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         return true
     }
     
-    func signUp() {
-        if self.email.isEmpty || !isValidEmail(self.email){
-            alertValidEmail()
-        }
-        else if self.password.isEmpty {
-            alertValidPassword()
-        }
-        else if self.zipCode.isEmpty || !isValidZipcode(self.zipCode){
-            alertValidZipcode()
-        }
-        else {
-            request(.GET, "\(LNT_URL)/users/sign_up", parameters: nil).responseString { (request, response, json, error) -> Void in
-                let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as! String
-                ServerManager.signUp(csrfToken, email: self.email, password: self.password, zipcode: self.zipCode, usesElectricity: self.usesElectricity, usesWater: self.usesWater, usesNaturalGas: self.usesNaturalGas)
-            }
-        }
-    }
-    
-    func isValidZipcode(testStr: String) -> Bool {
-        let zipcodeRegex = "^[0-9]{5}(-[0-9]{4})?"
-        
-        let zipcodeTest = NSPredicate(format:"SELF MATCHES %@", zipcodeRegex)
-        return zipcodeTest.evaluateWithObject(testStr)
-    }
-    
-    func isValidEmail(testStr: String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
-        
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return emailTest.evaluateWithObject(testStr)
-    }
-    
-    func alertValidEmail() {
-        var alert = UIAlertView(title: "Error", message: "Valid email required.", delegate: nil, cancelButtonTitle: "OK")
-        alert.show()
-    }
-    
-    func alertValidPassword() {
-        var alert = UIAlertView(title: "Error", message: "Enter a password.", delegate: nil, cancelButtonTitle: "OK")
-        alert.show()
-    }
-    
-    func alertValidZipcode() {
-        var alert = UIAlertView(title: "Error", message: "Enter a valid zipcode.", delegate: nil, cancelButtonTitle: "OK")
-        alert.show()
-    }
-    
-    func login() {
-        if self.email.isEmpty {
-            alertValidEmail()
-        }
-        else if self.password.isEmpty {
-            alertValidPassword()
-        }
-        else {
-            ServerManager.login(self.email, password: self.password, completion: { (error: NSError?) -> () in
-                
-            })
-        }
-    }
-    
-    func postStats(csrfToken: String) {
-        let authToken = "Yx9z4kQLKErd_RDiiuiE"
-        let email = "derpy@test.com"
-        let params = ["user_token":authToken, "user_email": email,
-            "authenticity_token":csrfToken,
-            "electricity_usage": 150,
-            "month": "August",
-            "year": 2015] as [String: AnyObject]
-        
-        request(.POST, "\(LNT_URL)/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
-            println(request)
-            println()
-            println(response)
-            println()
-            println(json)
-            println()
-            println(error)
-        }
-    }
-    
-    func setHomeViewControllerToRoot() {
-        let appDelegateTemp = UIApplication.sharedApplication().delegate
-        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        appDelegateTemp?.window??.rootViewController = storyboard.instantiateInitialViewController() as? UIViewController
-    }
-    
+    //MARK: - Button/Toggle Delegate Actions
     func didPressButtonCell(buttonCell: ButtonCell) {
         switch buttonCell.title {
         case "Log In":
             login()
         case "Sign Up":
-            signUp()
+            register()
         default:
             break
         }
@@ -410,6 +376,22 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     @IBAction func toggleAuthModeButtonPressed(sender: AnyObject) {
         activeMode == UserAuthViewMode.Login ? setRegistrationMode() : setLoginMode()
         tableView.reloadData()
+    }
+    
+    //MARK: - Error AlertViews
+    func alertValidEmail() {
+        var alert = UIAlertView(title: "Error", message: "Valid email required.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+    }
+    
+    func alertValidPassword() {
+        var alert = UIAlertView(title: "Error", message: "Enter a password.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
+    }
+    
+    func alertValidZipcode() {
+        var alert = UIAlertView(title: "Error", message: "Enter a valid zipcode.", delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
     }
     
 }
