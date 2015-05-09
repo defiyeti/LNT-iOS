@@ -51,19 +51,6 @@ class ServerManager {
     }
     
     /**
-    Returns more detailed user information and all stats associated with that account.
-    
-    :param: completion  Completion block with a user object
-    */
-    class func getUserDetails(completion: (user: User) -> ()) {
-        let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
-        let (dictionary, error) = Locksmith.loadDataForUserAccount(email)
-        let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
-        
-        getUserDetails(email, userToken: authToken, completion: completion)
-    }
-    
-    /**
     Helper method that returns a non-null Statistic if parameters are correct.
     
     :param: stat        JSON dictionary of values
@@ -86,6 +73,19 @@ class ServerManager {
                 return Statistic(id: id, electricityUsage: electricityUsage, waterUsage: waterUsage, naturalGasUsage: naturalGasUsage, carbonFootprint: carbonFootprint, month: month, year: year, createdAt: createdAt, updatedAt: updatedAt)
         }
         return nil
+    }
+    
+    /**
+    Returns more detailed user information and all stats associated with that account.
+    
+    :param: completion  Completion block with a user object
+    */
+    class func getUserDetails(completion: (user: User) -> ()) {
+        let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
+        let (dictionary, error) = Locksmith.loadDataForUserAccount(email)
+        let authToken = dictionary?.objectForKey(USER_TOKEN_KEY) as! String
+        
+        getUserDetails(email, userToken: authToken, completion: completion)
     }
     
     /** Use the public function that fetches the CSRF token for you. */
