@@ -38,8 +38,8 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
         if allowsDateEdit {
             let date = NSDate()
             let calendar = NSCalendar.currentCalendar()
-            let monthComponents = calendar.components(.CalendarUnitMonth, fromDate: date)
-            let yearComponents = calendar.components(.CalendarUnitYear, fromDate: date)
+            let monthComponents = calendar.components(.Month, fromDate: date)
+            let yearComponents = calendar.components(.Year, fromDate: date)
             month = monthComponents.month-1
             year = yearComponents.year
         }
@@ -49,7 +49,7 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
-                var cell = utilityInputCell(tableView, utility: Utility.Electricity) as TextFieldCell
+                let cell = utilityInputCell(tableView, utility: Utility.Electricity) as TextFieldCell
                 cell.textField.tag = ELECTRICITY_TAG
                 cell.textField.delegate = self
                 if electricityUsage != nil {
@@ -58,7 +58,7 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
                 cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
                 return cell
             case 1:
-                var cell = utilityInputCell(tableView, utility: Utility.Water) as TextFieldCell
+                let cell = utilityInputCell(tableView, utility: Utility.Water) as TextFieldCell
                 cell.textField.tag = WATER_TAG
                 cell.textField.delegate = self
                 if waterUsage != nil {
@@ -67,7 +67,7 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
                 cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
                 return cell
             case 2:
-                var cell = utilityInputCell(tableView, utility: Utility.NaturalGas) as TextFieldCell
+                let cell = utilityInputCell(tableView, utility: Utility.NaturalGas) as TextFieldCell
                 cell.textField.tag = NATURAL_GAS_TAG
                 cell.textField.delegate = self
                 if naturalGasUsage != nil {
@@ -76,7 +76,7 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
                 cell.textField.addTarget(self, action: "textChanged:", forControlEvents: UIControlEvents.EditingChanged)
                 return cell
             case 3:
-                var cell = tableView.dequeueReusableCellWithIdentifier("PickerCell") as! MonthYearPickerCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("PickerCell") as! MonthYearPickerCell
                 cell.select(month!, year: year!)
                 cell.delegate = self
                 cell.hidden = !allowsDateEdit
@@ -86,7 +86,7 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         }
         else if indexPath.section == 1 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
             cell.title = "Submit"
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             cell.delegate = self
@@ -97,7 +97,7 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func utilityInputCell(tableView: UITableView, utility: Utility) -> TextFieldCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         switch utility {
         case Utility.Electricity:
@@ -153,11 +153,11 @@ class StatInputViewController: UIViewController, UITableViewDelegate, UITableVie
     func textChanged(textField: UITextField) {
         switch textField.tag {
         case ELECTRICITY_TAG:
-            electricityUsage = textField.text.isEmpty ? textField.placeholder?.toInt() : textField.text.toInt()!
+            electricityUsage = textField.text.isEmpty ? Int(textField.placeholder?) : Int(textField.text)!
         case WATER_TAG:
-            waterUsage = textField.text.isEmpty ? textField.placeholder?.toInt() : textField.text.toInt()!
+            waterUsage = textField.text.isEmpty ? Int(textField.placeholder?) : Int(textField.text)!
         case NATURAL_GAS_TAG:
-            naturalGasUsage = textField.text.isEmpty ? textField.placeholder?.toInt() : textField.text.toInt()!
+            naturalGasUsage = textField.text.isEmpty ? Int(textField.placeholder?) : Int(textField.text)!
         default:
             break
         }

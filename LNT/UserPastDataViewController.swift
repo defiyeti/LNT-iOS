@@ -26,7 +26,7 @@ class UserPastDataViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func multilineCell(tableView: UITableView, stat: Statistic) -> MultilineCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("MultilineCell") as! MultilineCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("MultilineCell") as! MultilineCell
         cell.title = "\(months[stat.month]), \(stat.year)"
         if stat.electricityUsage != nil {
             cell.textOne = "Electricity Usage: \(stat.electricityUsage!) kW/hr"
@@ -62,8 +62,8 @@ class UserPastDataViewController: UIViewController, UITableViewDelegate, UITable
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "EditPastDataSegue" {
-            var stat = currentUser!.stats[tableView.indexPathForSelectedRow()!.row]
-            var statInputVC = segue.destinationViewController as! StatInputViewController
+            let stat = currentUser!.stats[tableView.indexPathForSelectedRow!.row]
+            let statInputVC = segue.destinationViewController as! StatInputViewController
             statInputVC.usesElectricity = currentUser!.usesElectricity
             statInputVC.usesWater = currentUser!.usesWater
             statInputVC.usesNaturalGas = currentUser!.usesNaturalGas

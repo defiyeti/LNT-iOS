@@ -34,7 +34,7 @@ class TipsViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("TipCell") as! TextViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TipCell") as! TextViewCell
         cell.textView?.text = tips[indexPath.row].text
         let width = cell.textView?.frame.size.width
 //        cell.textView?.frame.size = CGSize(width: width!, height: heightForTextView(tips[indexPath.row].text))

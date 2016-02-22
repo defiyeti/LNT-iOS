@@ -53,8 +53,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func randomData() -> [Graph.Point] {
         var points: [Graph.Point] = []
         for var i = 0.0; i < 12.0; i += 1 {
-            var y = 50 + arc4random_uniform(200)
-            var point = Graph.Point(object: i, value: CGFloat(y))
+            let y = 50 + arc4random_uniform(200)
+            let point = Graph.Point(object: i, value: CGFloat(y))
             points.append(point)
         }
         return points
@@ -63,7 +63,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func dataToPoints(data: [(Int, CGFloat)]) -> [Graph.Point] {
         var points: [Graph.Point] = []
         for stat in data {
-            var point = Graph.Point(object: stat.0, value: stat.1)
+            let point = Graph.Point(object: stat.0, value: stat.1)
             points.append(point)
         }
         return points
@@ -137,19 +137,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
-            var cell = utilityCell(tableView, utility: Utility.CarbonFootprint)
+            let cell = utilityCell(tableView, utility: Utility.CarbonFootprint)
             return cell
         case 1:
-            var cell = utilityCell(tableView, utility: Utility.Electricity)
+            let cell = utilityCell(tableView, utility: Utility.Electricity)
             return cell
         case 2:
-            var cell = utilityCell(tableView, utility: Utility.Water)
+            let cell = utilityCell(tableView, utility: Utility.Water)
             return cell
         case 3:
-            var cell = utilityCell(tableView, utility: Utility.NaturalGas)
+            let cell = utilityCell(tableView, utility: Utility.NaturalGas)
             return cell
         case 4:
-            var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         default:
@@ -210,7 +210,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier("UtilityCell") as! UtilityCell
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         var points: [Graph.Point] = []
-        var limit = 0.5 as Float
+        let limit = 0.5 as Float
         var shouldHide = true
         switch utility {
         case Utility.CarbonFootprint:
@@ -270,13 +270,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             break
         }
         
-        var image = UIImage(named: "notification_icon@2x.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        let image = UIImage(named: "notification_icon@2x.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         cell.usageAlertButton.setImage(image, forState: UIControlState.Normal)
         cell.tintColor = UIColor.whiteColor()
         cell.usageAlertButton.hidden = shouldHide
         
         if points.count > 1 {
-            var plot = Graph.Plot()
+            let plot = Graph.Plot()
             plot.points = points
             plot.strokeColor = UIColor.whiteColor()
             plot.pointRadius = 3.0
@@ -319,7 +319,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         if segue.identifier == "ShowTipsSegue" {
-            var tipsVC = segue.destinationViewController as! TipsViewController
+            let tipsVC = segue.destinationViewController as! TipsViewController
             tipsVC.activeUtility = selectedUtility
         }
     }

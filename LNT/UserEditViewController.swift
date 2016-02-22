@@ -52,7 +52,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let inset:CGFloat = 10.0
         if indexPath.section == 0 {
-                var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
                 cell.button.setTitle("Log Out", forState: UIControlState.Normal)
                 cell.button.backgroundColor = UIColor.leaveNoTracePink()
                 cell.title = "Log Out"
@@ -63,7 +63,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
         if indexPath.section == 1 {
             switch indexPath.row {
             case 0:
-                var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                 cell.textField.placeholder = "Change your email"
                 cell.textField.delegate = self
                 cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
@@ -73,7 +73,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.textField.tag = EMAIL_TAG
                 return cell
             case 1:
-                var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                 cell.textField.placeholder = "Change your password"
                 cell.textField.secureTextEntry = true
                 cell.textField.delegate = self
@@ -82,7 +82,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.textField.tag = PASSWORD_TAG
                 return cell
             case 2:
-                var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                 cell.textField.placeholder = "Change your zipcode"
                 cell.textField.keyboardType = UIKeyboardType.NumberPad
                 cell.textField.secureTextEntry = false
@@ -92,7 +92,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.textField.tag = ZIPCODE_TAG
                 return cell
             case 3:
-                var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.toggleLabel.text = "Electricity"
                 cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceYellow().lighterColor()
@@ -105,7 +105,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.delegate = self
                 return cell
             case 4:
-                var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.toggleLabel.text = "Water"
                 cell.toggleSwitch.onTintColor = UIColor.leaveNoTraceBlue().lighterColor()
@@ -118,7 +118,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.delegate = self
                 return cell
             case 5:
-                var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 cell.toggleLabel.text = "Natural Gas"
                 cell.toggleSwitch.onTintColor = UIColor(white: 1.0, alpha: 0.5)
@@ -131,7 +131,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.delegate = self
                 return cell
             case 6:
-                var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
                 cell.button.setTitle("Update Account", forState: UIControlState.Normal)
                 cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
                 cell.title = "Update Account"
@@ -143,7 +143,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         else if indexPath.section == 2 {
-            var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
             cell.button.setTitle("Edit Past Data", forState: UIControlState.Normal)
             cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
             cell.title = "Edit Past Data"
@@ -194,7 +194,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if var cell = tableView.cellForRowAtIndexPath(indexPath) as? ToggleCell {
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) as? ToggleCell {
             cell.toggle(!cell.on(), animated: true)
         }
     }
@@ -243,7 +243,7 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         if segue.identifier == "UserPastDataSegue" {
-            var pastDataVC = segue.destinationViewController as! UserPastDataViewController
+            let pastDataVC = segue.destinationViewController as! UserPastDataViewController
             pastDataVC.currentUser = currentUser
         }
     }
@@ -253,8 +253,8 @@ class UserEditViewController: UIViewController, UITableViewDelegate, UITableView
         
         let appDelegateTemp = UIApplication.sharedApplication().delegate
         let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") as! UIViewController
-        var navigation = UINavigationController(rootViewController: rootController)
+        let rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") 
+        let navigation = UINavigationController(rootViewController: rootController)
         appDelegateTemp?.window??.rootViewController = navigation
     }
 }

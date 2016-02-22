@@ -30,7 +30,7 @@ class MonthYearPickerCell: UITableViewCell, UIPickerViewDelegate, UIPickerViewDa
         get {
             let date = NSDate()
             let calendar = NSCalendar.currentCalendar()
-            let components = calendar.components(.CalendarUnitYear, fromDate: date)
+            let components = calendar.components(.Year, fromDate: date)
             let year = components.year
             var y: [String] = []
             for var i = 4; i >= 0; i-- {
@@ -53,7 +53,7 @@ class MonthYearPickerCell: UITableViewCell, UIPickerViewDelegate, UIPickerViewDa
     
     func select(month: Int, year: Int) {
         picker.selectRow(month, inComponent: 0, animated: false)
-        var y = find(years, "\(year)")
+        var y = years.indexOf("\(year)")
         y = y != nil ? y : 0
         picker.selectRow(y!, inComponent: 1, animated: false)
         self.month = month
@@ -65,7 +65,7 @@ class MonthYearPickerCell: UITableViewCell, UIPickerViewDelegate, UIPickerViewDa
             month = row
         }
         else if component == YEAR_COMPONENT {
-            year = years[row].toInt()!
+            year = Int(years[row])!
         }
         delegate?.didChangeDate(self, month: month, year: year)
     }
