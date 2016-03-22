@@ -72,14 +72,14 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             if indexPath.section == 0 {
                 switch indexPath.row {
                 case 0:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                     cell.textField.placeholder = EMAIL_PROMPT
                     cell.textField.delegate = self
                     cell.textField.layer.sublayerTransform = CATransform3DMakeTranslation(inset, 0, 0)
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     return cell
                 case 1:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                     cell.textField.placeholder = PASSWORD_PROMT
                     cell.textField.secureTextEntry = true
                     cell.textField.delegate = self
@@ -87,7 +87,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
                     return cell
                 case 2:
-                    var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+                    let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
                     cell.textField.placeholder = ZIPCODE_PROMPT
                     cell.textField.keyboardType = UIKeyboardType.NumberPad
                     cell.textField.secureTextEntry = false
@@ -100,7 +100,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
             else if indexPath.section == 1 {
-                var cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("ToggleCell") as! ToggleCell
                 switch indexPath.row {
                 case 0:
                     cell.selectionStyle = UITableViewCellSelectionStyle.None
@@ -141,7 +141,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         
         switch row {
         case 0:
-            var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
             cell.textField.placeholder = EMAIL_PROMPT
             cell.textField.secureTextEntry = false
             cell.textField.delegate = self
@@ -150,7 +150,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         case 1:
-            var cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("TextFieldCell") as! TextFieldCell
             cell.textField.placeholder = PASSWORD_PROMT
             cell.textField.secureTextEntry = true
             cell.textField.returnKeyType = UIReturnKeyType.Go
@@ -160,7 +160,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         case 2:
-            var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
             cell.button.setTitle("Log In", forState: UIControlState.Normal)
             cell.title = "Log In"
             cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
@@ -173,7 +173,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func signUpButtonCell(tableView: UITableView!) -> ButtonCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("ButtonCell") as! ButtonCell
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.button.setTitle("Sign Up", forState: UIControlState.Normal)
         cell.button.backgroundColor = UIColor.leaveNoTraceGreen()
@@ -207,7 +207,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // Toggle the cell when tapped if it is indeed a ToggleCell
-        if var cell = tableView.cellForRowAtIndexPath(indexPath) as? ToggleCell {
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) as? ToggleCell {
             cell.toggle(!cell.on(), animated: true)
         }
     }
@@ -272,7 +272,7 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
         else {
             ServerManager.login(self.email, password: self.password, completion: { (error: NSError?) -> () in
                 if error != nil {
-                    println(error)
+                    print(error)
                 }
             })
         }
@@ -380,17 +380,17 @@ class UserAuthViewController: UIViewController, UITableViewDelegate, UITableView
     
     //MARK: - Error AlertViews
     func alertValidEmail() {
-        var alert = UIAlertView(title: "Error", message: "Valid email required.", delegate: nil, cancelButtonTitle: "OK")
+        let alert = UIAlertView(title: "Error", message: "Valid email required.", delegate: nil, cancelButtonTitle: "OK")
         alert.show()
     }
     
     func alertValidPassword() {
-        var alert = UIAlertView(title: "Error", message: "Enter a password.", delegate: nil, cancelButtonTitle: "OK")
+        let alert = UIAlertView(title: "Error", message: "Enter a password.", delegate: nil, cancelButtonTitle: "OK")
         alert.show()
     }
     
     func alertValidZipcode() {
-        var alert = UIAlertView(title: "Error", message: "Enter a valid zipcode.", delegate: nil, cancelButtonTitle: "OK")
+        let alert = UIAlertView(title: "Error", message: "Enter a valid zipcode.", delegate: nil, cancelButtonTitle: "OK")
         alert.show()
     }
     

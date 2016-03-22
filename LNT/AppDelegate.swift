@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let dict = NSBundle.mainBundle().infoDictionary as NSDictionary?
         let buildString: String = dict?.objectForKey("CFBundleVersion") as! String
         let versionString: String = dict?.objectForKey("CFBundleShortVersionString") as! String
-        print("::: Build " + buildString + ", Version " + versionString + " :::\n")
+        print("::: Build " + buildString + ", Version " + versionString + " :::\n", terminator: "")
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -32,14 +32,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     self.window?.rootViewController = storyboard.instantiateInitialViewController() as? UIViewController
                 }
                 else {
-                    var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") as! UIViewController
+                    var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") 
                     var navigation = UINavigationController(rootViewController: rootController)
                     self.window?.rootViewController = navigation
                 }
             }
         }
         else {
-            var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") as! UIViewController
+            var rootController = storyboard.instantiateViewControllerWithIdentifier("UserAuthViewController") 
             var navigation = UINavigationController(rootViewController: rootController)
             self.window?.rootViewController = navigation
         }

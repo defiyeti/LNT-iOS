@@ -21,13 +21,13 @@ class ServerManager {
     /**
     Retrieves user's utility stats with proper credentials.
     
-    :param: email       User's email
-    :param: userToken   User's authentication token (retrieved at login)
-    :param: completion  Completion block with stats
+    - parameter email:       User's email
+    - parameter userToken:   User's authentication token (retrieved at login)
+    - parameter completion:  Completion block with stats
     */
     class func getStats(email: String!, userToken: String!, completion: (stats: [Statistic], electricityRanking: [String:AnyObject], waterRanking: [String:AnyObject], naturalGasRankings: [String:AnyObject], carbonFootprintRanking: [String:AnyObject], usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) -> ()) {
         let params = ["user_token": userToken, "user_email": email]
-        LNT.request(.GET, "\(LNT_URL)/users/stats.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
+        LNT.request(.GET, URLString: "\(LNT_URL)/users/stats.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
             if let jsonDict = json as? NSDictionary {
                 let stats: [[String:AnyObject]] = jsonDict.objectForKey("last_twelve_months") as! [[String:AnyObject]]
                 var statistics: [Statistic] = []
@@ -53,8 +53,8 @@ class ServerManager {
     /**
     Helper method that returns a non-null Statistic if parameters are correct.
     
-    :param: stat        JSON dictionary of values
-    :returns:           Statistic with parameters, nil otherwise
+    - parameter stat:        JSON dictionary of values
+    - returns:           Statistic with parameters, nil otherwise
     */
     private class func parseStat(stat: [String: AnyObject]) -> Statistic? {
         if let id: Int = stat["id"] as? Int,
@@ -78,7 +78,7 @@ class ServerManager {
     /**
     Returns more detailed user information and all stats associated with that account.
     
-    :param: completion  Completion block with a user object
+    - parameter completion:  Completion block with a user object
     */
     class func getUserDetails(completion: (user: User) -> ()) {
         let email = NSUserDefaults.standardUserDefaults().objectForKey(USER_EMAIL_DEFAULTS_KEY) as! String
@@ -91,7 +91,7 @@ class ServerManager {
     /** Use the public function that fetches the CSRF token for you. */
     private class func getUserDetails(email: String!, userToken: String!, completion: (user: User) -> ()) {
         let params = ["user_token": userToken, "user_email": email]
-        LNT.request(.GET, "\(LNT_URL)/users/show.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
+        LNT.request(.GET, URLString: "\(LNT_URL)/users/show.json", parameters: params).responseJSON { (_, _, json, _) -> Void in
             if let jsonDict = json as? NSDictionary {
                 var user = User(email: email, zipcode: jsonDict.objectForKey("zip_code") as? String)
                 user.id = jsonDict.objectForKey("id") as? Int
@@ -107,7 +107,7 @@ class ServerManager {
                             statistics.append(s)
                     }
                 }
-                user.stats = statistics.reverse()
+                user.stats = Array(statistics.reverse())
                 completion(user: user)
             }
         }
@@ -116,8 +116,8 @@ class ServerManager {
     /**
     Fetches a list of UtilityTip objects based on the specified Utility
     
-    :param: utility     Utility to be fetched
-    :param: completion  Completion block containing an array of UtilityTip objects
+    - parameter utility:     Utility to be fetched
+    - parameter completion:  Completion block containing an array of UtilityTip objects
     */
     class func getTips(utility: Utility, completion: (tips: [UtilityTip]) -> ()) {
         var utilityString = ""
@@ -131,7 +131,7 @@ class ServerManager {
         default:
             break
         }
-        LNT.request(.GET, "\(LNT_URL)/utility_tips/\(utilityString).json", parameters: nil).responseJSON { (_, _, json, _) -> Void in
+        LNT.request(.GET, URLString: "\(LNT_URL)/utility_tips/\(utilityString).json", parameters: nil).responseJSON { (_, _, json, _) -> Void in
             var tips: [UtilityTip] = []
             if let jsonArray = json as? [[String:AnyObject]] {
                 for jsonTip in jsonArray {
@@ -151,14 +151,14 @@ class ServerManager {
     /**
     Logs the user in
     
-    :param: email           E-mail address
-    :param: password        User's password
-    :param: completion      Block to be executed after completion of login
+    - parameter email:           E-mail address
+    - parameter password:        User's password
+    - parameter completion:      Block to be executed after completion of login
     
-    :returns: No return value
+    - returns: No return value
     */
     class func login(email: String!, password: String!, completion: (error: NSError?) -> ()) {
-        request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+        request(.GET, URLString: "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
             let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String
             if csrfToken == nil || error != nil {
                 completion(error: error)
@@ -175,12 +175,12 @@ class ServerManager {
     /** Use the public function that fetches the CSRF token for you. */
     private class func login(csrf: String, email: String!, password: String!, completion: (error: NSError?) -> ()) {
         let params = ["user":["email": email, "password": password], "authenticity_token":csrf] as [String:AnyObject]
-        println(params)
-        request(.POST, "\(LNT_URL)/users/sign_in", parameters: params).responseString { (request, response, json, error) -> Void in
+        print(params)
+        request(.POST, URLString: "\(LNT_URL)/users/sign_in", parameters: params).responseString { (request, response, json, error) -> Void in
             let authToken = response?.allHeaderFields["X-Auth-Token"] as? String
             completion(error: error)
-            println(response)
-            println(response?.statusCode)
+            print(response)
+            print(response?.statusCode)
             if response?.statusCode == 401 {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     ServerManager.alertLoginFailed()
@@ -198,16 +198,16 @@ class ServerManager {
     /**
     Signs the user in
     
-    :param: email               E-mail address
-    :param: password            User's password
-    :param: zipcode             User's zipcode
-    :param: usesElectricity     Does the user want to see electricity stats?
-    :param: usesWater           Does the user want to see water stats?
-    :param: usesNaturalGas      Does the user want to see natural gas stats?
+    - parameter email:               E-mail address
+    - parameter password:            User's password
+    - parameter zipcode:             User's zipcode
+    - parameter usesElectricity:     Does the user want to see electricity stats?
+    - parameter usesWater:           Does the user want to see water stats?
+    - parameter usesNaturalGas:      Does the user want to see natural gas stats?
     */
     class func signUp(email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool) {
         
-        request(.GET, "\(LNT_URL)/users/sign_up", parameters: nil).responseString { (request, response, json, error) -> Void in
+        request(.GET, URLString: "\(LNT_URL)/users/sign_up", parameters: nil).responseString { (request, response, json, error) -> Void in
             let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as! String
             ServerManager.signUp(csrfToken, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas)
         }
@@ -219,14 +219,14 @@ class ServerManager {
             "zip_code": zipCode, "uses_electricity": usesElectricity, "uses_water": usesWater, "uses_natural_gas": usesNaturalGas],
             "authenticity_token": csrfToken] as [String:AnyObject]
         
-        LNT.request(.POST, "\(LNT_URL)/users", parameters: params).responseString { (request, response, json, error) -> Void in
+        LNT.request(.POST, URLString: "\(LNT_URL)/users", parameters: params).responseString { (request, response, json, error) -> Void in
             let authToken = response?.allHeaderFields["X-Auth-Token"] as? String
             if authToken != nil {
                 let error = Locksmith.saveData([USER_TOKEN_KEY: authToken!], forUserAccount: email)
                 NSUserDefaults.standardUserDefaults().setValue(email, forKey: USER_EMAIL_DEFAULTS_KEY)
                 NSNotificationCenter.defaultCenter().postNotificationName(UserDidLoginNotification, object: nil)
             }
-            println(response)
+            print(response)
         }
     }
     
@@ -234,17 +234,17 @@ class ServerManager {
     /**
     Updates user's information.
     
-    :param: id                  User's id
-    :param: email               User's email
-    :param: password            User's password
-    :param: zipCode             User's zipcode
-    :param: usesElectricity     Does the user use electricity?
-    :param: usesWater           Does the user use water?
-    :param: usesNaturalGas      Does the user use natural gas?
-    :param: completion          Completion block after update
+    - parameter id:                  User's id
+    - parameter email:               User's email
+    - parameter password:            User's password
+    - parameter zipCode:             User's zipcode
+    - parameter usesElectricity:     Does the user use electricity?
+    - parameter usesWater:           Does the user use water?
+    - parameter usesNaturalGas:      Does the user use natural gas?
+    - parameter completion:          Completion block after update
     */
     class func updateUser(id: Int, email: String, password: String, zipCode: String, usesElectricity: Bool, usesWater: Bool, usesNaturalGas: Bool, completion: (error: NSError?) -> ()) {
-        LNT.request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+        LNT.request(.GET, URLString: "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
             
             if let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String {
                 ServerManager.updateUser(csrfToken, id: id, email: email, password: password, zipCode: zipCode, usesElectricity: usesElectricity, usesWater: usesWater, usesNaturalGas: usesNaturalGas, completion: completion)
@@ -270,7 +270,7 @@ class ServerManager {
             userParams["password"] = password
         }
         if !zipCode.isEmpty {
-            userParams["zip_code"] = zipCode.toInt()
+            userParams["zip_code"] = Int(zipCode)
         }
         userParams["uses_electricity"] = usesElectricity
         userParams["uses_water"] = usesWater
@@ -280,7 +280,7 @@ class ServerManager {
             "authenticity_token":csrfToken,
             "user": userParams] as [String: AnyObject]
         
-        LNT.request(.PUT, "\(LNT_URL)/users/\(id).json", parameters: params).responseString { (request, response, json, error) -> Void in
+        LNT.request(.PUT, URLString: "\(LNT_URL)/users/\(id).json", parameters: params).responseString { (request, response, json, error) -> Void in
             completion(error: error)
         }
     }
@@ -289,11 +289,11 @@ class ServerManager {
     /**
     Posts a Statistic as the currently logged in user
     
-    :param: stat        Statistic object
-    :param: completion  Completion block with optional error
+    - parameter stat:        Statistic object
+    - parameter completion:  Completion block with optional error
     */
     class func postStats(stat: Statistic, completion: (error: NSError?) -> ()) {
-        LNT.request(.GET, "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
+        LNT.request(.GET, URLString: "\(LNT_URL)/users/sign_in", parameters: nil).responseString { (request, response, json, error) -> Void in
             
             if let csrfToken = response?.allHeaderFields["X-Csrf-Token"] as? String {
                 ServerManager.postStats(csrfToken, stat: stat, completion: completion)
@@ -327,7 +327,7 @@ class ServerManager {
             params["natural_gas_usage"] = naturalGasUsage
         }
         
-        LNT.request(.POST, "\(LNT_URL)/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
+        LNT.request(.POST, URLString: "\(LNT_URL)/stats.json", parameters: params).responseString { (request, response, json, error) -> Void in
             completion(error: error)
         }
     }
@@ -337,7 +337,7 @@ class ServerManager {
     Displays an alert instructing the user there is no internet connection.
     */
     class func alertNoInternetConnection() {
-        var alert = UIAlertView(title: "Error", message: "Cannot connect to the server. Please check your network settings and try again.", delegate: nil, cancelButtonTitle: "OK")
+        let alert = UIAlertView(title: "Error", message: "Cannot connect to the server. Please check your network settings and try again.", delegate: nil, cancelButtonTitle: "OK")
         alert.show()
     }
     
@@ -345,7 +345,7 @@ class ServerManager {
     Displays an alert instructing the user that login failed.
     */
     class func alertLoginFailed() {
-        var alert = UIAlertView(title: "Error", message: "Username/password credentials invalid.", delegate: nil, cancelButtonTitle: "OK")
+        let alert = UIAlertView(title: "Error", message: "Username/password credentials invalid.", delegate: nil, cancelButtonTitle: "OK")
         alert.show()
     }
 }
